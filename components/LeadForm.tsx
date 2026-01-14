@@ -45,7 +45,7 @@ export default function LeadForm() {
           </div>
           <h3 className="text-2xl font-bold text-navy mb-2">Thank You!</h3>
           <p className="text-gray-600">
-            Your personalized solar report is being prepared. We'll text it to your phone shortly.
+            Your personalized solar report is being prepared. We&apos;ll text it to your phone shortly.
           </p>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function LeadForm() {
             placeholder="(555) 123-4567"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange focus:border-transparent outline-none transition"
           />
-          <p className="text-gray-500 text-xs mt-1">We'll text your report here</p>
+          <p className="text-gray-500 text-xs mt-1">We&apos;ll text your report here</p>
           {errors.phone && (
             <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>
           )}
@@ -137,7 +137,7 @@ export default function LeadForm() {
 
         {/* TCPA Consent */}
         <div className="text-xs text-gray-600 leading-relaxed">
-          By clicking "Get My Free Report", you agree to receive your solar report and related
+          By clicking &quot;Get My Free Report&quot;, you agree to receive your solar report and related
           information via SMS to the phone number provided. Msg & data rates may apply. Reply
           STOP to opt out.{' '}
           <Link href="/privacy" className="text-orange hover:underline">

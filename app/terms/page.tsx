@@ -24,7 +24,7 @@ export default function TermsOfService() {
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-4">Agreement to Terms</h2>
                 <p className="text-gray-700 mb-4">
-                  By accessing and using Lumen Solar Concierge's website and services, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our service.
+                  By accessing and using Lumen Solar Concierge&apos;s website and services, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our service.
                 </p>
               </section>
 
@@ -101,7 +101,7 @@ export default function TermsOfService() {
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-4">Changes to Terms</h2>
                 <p className="text-gray-700 mb-4">
-                  We reserve the right to modify these terms at any time. We will notify users of any material changes by updating the "Last updated" date. Your continued use of the service after such changes constitutes acceptance of the new terms.
+                  We reserve the right to modify these terms at any time. We will notify users of any material changes by updating the &quot;Last updated&quot; date. Your continued use of the service after such changes constitutes acceptance of the new terms.
                 </p>
               </section>
 

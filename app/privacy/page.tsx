@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-4">Introduction</h2>
                 <p className="text-gray-700 mb-4">
-                  Lumen Solar Concierge ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
+                  Lumen Solar Concierge (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
                 </p>
               </section>
 
