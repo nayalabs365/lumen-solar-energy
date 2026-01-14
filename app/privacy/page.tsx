@@ -94,6 +94,13 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="mb-8">
+                <h2 className="text-2xl font-bold text-navy mb-4">Governing Law</h2>
+                <p className="text-gray-700 mb-4">
+                  This Privacy Policy shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law provisions.
+                </p>
+              </section>
+
+              <section className="mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-4">Contact Us</h2>
                 <p className="text-gray-700 mb-4">
                   If you have questions about this Privacy Policy, please contact us at:

@@ -108,7 +108,7 @@ export default function TermsOfService() {
               <section className="mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-4">Governing Law</h2>
                 <p className="text-gray-700 mb-4">
-                  These Terms shall be governed by and construed in accordance with the laws of the State of Illinois, without regard to its conflict of law provisions.
+                  These Terms shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of law provisions.
                 </p>
               </section>
 
