@@ -100,7 +100,7 @@ export default function Home() {
       <footer className="bg-cream py-10 px-4 border-t-2 border-gray-200">
         <div className="container mx-auto max-w-7xl text-center space-y-5">
           <div className="text-sm font-medium text-gray-700">
-            © 2026 Lumen Solar Concierge · Naya Labs, Inc.
+            © 2026 Lumen Solar Concierge
           </div>
 
           <div className="flex justify-center gap-8 text-sm">

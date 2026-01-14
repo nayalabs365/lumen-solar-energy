@@ -119,8 +119,7 @@ export default function TermsOfService() {
                 </p>
                 <p className="text-gray-700">
                   Lumen Solar Concierge<br />
-                  Naya Labs, Inc.<br />
-                  Email: support@lumensolar.com
+                  Email: support@lumensolar.energy
                 </p>
               </section>
             </div>
@@ -138,7 +137,7 @@ export default function TermsOfService() {
       <footer className="bg-cream py-8 px-4 border-t border-gray-200">
         <div className="container mx-auto max-w-4xl text-center space-y-4">
           <div className="text-sm text-gray-600">
-            © 2026 Lumen Solar Concierge · Naya Labs, Inc.
+            © 2026 Lumen Solar Concierge
           </div>
           <div className="flex justify-center gap-6 text-sm">
             <Link href="/privacy" className="text-gray-600 hover:text-navy transition">
