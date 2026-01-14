@@ -137,16 +137,15 @@ export default function LeadForm() {
 
         {/* TCPA Consent */}
         <div className="text-xs text-gray-600 leading-relaxed">
-          By clicking &quot;Get My Free Report&quot;, you agree to receive your solar report and related
-          information via SMS to the phone number provided. Msg & data rates may apply. Reply
-          STOP to opt out.{' '}
+          We&apos;re here to help! Each time that you fill out this form, you agree to be contacted by phone call, pre-recorded voice, and/or text message at the telephone or mobile number that you entered above by Lumen Solar Concierge and by one (1) other company about solar and energy storage products and services. These calls/messages may be sent using automated telephone technology, even if your telephone or mobile number is currently listed on any state, federal or corporate &quot;Do Not Call&quot; list. Message and data rates may apply. You are not required to give your consent here as a condition of any purchase. I understand the{' '}
           <Link href="/privacy" className="text-orange hover:underline">
             Privacy Policy
           </Link>
-          {' · '}
+          {' '}and agree to the{' '}
           <Link href="/terms" className="text-orange hover:underline">
-            Terms
+            Terms & Conditions
           </Link>
+          .
         </div>
 
         {/* Submit Button */}
