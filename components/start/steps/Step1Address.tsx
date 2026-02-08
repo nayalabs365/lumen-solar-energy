@@ -26,10 +26,19 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
   const handlePlaceSelect = () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
+      console.log('Place selected:', place);
       if (place.formatted_address) {
         setAddress(place.formatted_address);
+      } else if (place.name) {
+        setAddress(place.name);
       }
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    console.log('Address input changed:', value);
+    setAddress(value);
   };
 
   const handleSubmit = () => {
@@ -60,7 +69,13 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
       <LoadScript
         googleMapsApiKey={googleMapsApiKey}
         libraries={libraries}
-        onLoad={() => setIsScriptLoaded(true)}
+        onLoad={() => {
+          console.log('Google Maps script loaded successfully');
+          setIsScriptLoaded(true);
+        }}
+        onError={(error) => {
+          console.error('Google Maps script error:', error);
+        }}
       >
         <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
         {/* Left: Illustration Panel */}
@@ -86,6 +101,7 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
               {isScriptLoaded ? (
                 <Autocomplete
                   onLoad={(autocomplete) => {
+                    console.log('Autocomplete loaded:', autocomplete);
                     autocompleteRef.current = autocomplete;
                   }}
                   onPlaceChanged={handlePlaceSelect}
@@ -98,10 +114,12 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
                   <input
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={handleInputChange}
                     placeholder="123 Main Street, City, State"
                     className="w-full px-6 py-5 rounded-2xl bg-white border-2 border-[#CBD5E1] text-[1.1rem] text-navy placeholder:text-gray-400 transition-all duration-300 focus:outline-none focus:border-gold focus:shadow-[0_0_0_4px_rgba(245,158,11,0.1)] hover:border-gold-light"
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    name="address"
+                    id="address-input"
                   />
                 </Autocomplete>
               ) : (
