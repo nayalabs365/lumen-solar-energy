@@ -8,6 +8,13 @@ interface Step1Props {
   onComplete: (data: { address: string; ownership: string }) => void;
 }
 
+// Extend Window interface to include google
+declare global {
+  interface Window {
+    google?: typeof google;
+  }
+}
+
 export default function Step1Address({ data, onComplete }: Step1Props) {
   const [address, setAddress] = useState(data.address);
   const [ownership, setOwnership] = useState(data.ownership);
@@ -22,13 +29,13 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
   }, [address, ownership]);
 
   useEffect(() => {
-    if (isScriptLoaded && autocompleteInputRef.current && window.google) {
+    if (isScriptLoaded && autocompleteInputRef.current && window.google?.maps?.places) {
       initAutocomplete();
     }
   }, [isScriptLoaded]);
 
   const initAutocomplete = () => {
-    if (!autocompleteInputRef.current || !window.google) return;
+    if (!autocompleteInputRef.current || !window.google?.maps?.places?.Autocomplete) return;
 
     const autocomplete = new window.google.maps.places.Autocomplete(
       autocompleteInputRef.current,
