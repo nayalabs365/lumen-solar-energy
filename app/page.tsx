@@ -30,7 +30,7 @@ export default function Home() {
 
               <div className="flex gap-4 items-center flex-wrap animate-[fadeInUp_0.8s_ease_0.45s_both]">
                 <Link
-                  href="/your-report"
+                  href="/start"
                   className="inline-flex items-center gap-[10px] bg-gold text-navy font-bold px-8 py-4 rounded-[50px] text-[1rem] no-underline transition-all duration-300 shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_8px_30px_rgba(245,158,11,0.4)]"
                 >
                   Get Started — It&apos;s Free
@@ -300,7 +300,7 @@ export default function Home() {
             Get your free solar report in 60 seconds. No spam. No sales calls. Just smart guidance.
           </p>
           <Link
-            href="/your-report"
+            href="/start"
             className="inline-flex items-center gap-3 bg-gold text-navy font-bold px-10 py-5 rounded-[50px] text-[1.1rem] no-underline transition-all duration-300 shadow-[0_8px_30px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_12px_40px_rgba(245,158,11,0.4)]"
           >
             Get Your Free Solar Report
