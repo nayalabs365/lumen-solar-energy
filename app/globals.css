@@ -2,26 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: #1E3A5A;
+  --navy-deep: #142942;
+  --navy-light: #2A5078;
+  --gold: #F59E0B;
+  --gold-light: #FBD38D;
+  --gold-pale: #FEF3C7;
+  --warm-white: #FFFBF5;
+  --warm-bg: #FFF8EE;
+  --cream: #FDF6EC;
+  --text: #334155;
+  --text-light: #64748B;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 3px rgba(30,58,90,0.06);
+  --shadow-md: 0 4px 20px rgba(30,58,90,0.08);
+  --shadow-lg: 0 12px 40px rgba(30,58,90,0.12);
+  --shadow-xl: 0 24px 60px rgba(30,58,90,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--warm-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'DM Serif Display', serif;
+  font-weight: normal;
+  line-height: 1.2;
+  color: var(--navy-deep);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
