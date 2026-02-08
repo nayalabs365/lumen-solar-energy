@@ -56,12 +56,13 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
   }
 
   return (
-    <LoadScript
-      googleMapsApiKey={googleMapsApiKey}
-      libraries={libraries}
-      onLoad={() => setIsScriptLoaded(true)}
-    >
-      <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
+    <>
+      <LoadScript
+        googleMapsApiKey={googleMapsApiKey}
+        libraries={libraries}
+        onLoad={() => setIsScriptLoaded(true)}
+      >
+        <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
         {/* Left: Illustration Panel */}
         <div className="hidden md:flex items-center justify-center bg-gradient-to-br from-[#e8f0f8] to-[#c5d9ef] p-12">
           <div className="text-center">
@@ -78,9 +79,9 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
             </h2>
 
             {/* Address Field with Google Autocomplete */}
-            <div className="space-y-2">
-              <label className="block text-[0.78rem] font-semibold uppercase tracking-wide text-navy">
-                Your Address <span className="text-gold">*</span>
+            <div className="space-y-3">
+              <label className="block text-[0.95rem] font-bold uppercase tracking-wider text-navy">
+                ENTER YOUR ADDRESS <span className="text-gold">*</span>
               </label>
               {isScriptLoaded ? (
                 <Autocomplete
@@ -98,8 +99,8 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter your home address"
-                    className="w-full px-5 py-4 rounded-2xl bg-warm-white border-2 border-transparent text-[1.05rem] transition-all duration-300 focus:outline-none focus:border-gold focus:shadow-[0_0_0_4px_rgba(245,158,11,0.1)]"
+                    placeholder="123 Main Street, City, State"
+                    className="w-full px-6 py-5 rounded-2xl bg-white border-2 border-[#CBD5E1] text-[1.1rem] text-navy placeholder:text-gray-400 transition-all duration-300 focus:outline-none focus:border-gold focus:shadow-[0_0_0_4px_rgba(245,158,11,0.1)] hover:border-gold-light"
                     autoComplete="off"
                   />
                 </Autocomplete>
@@ -110,11 +111,11 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Loading Google Maps..."
                   disabled
-                  className="w-full px-5 py-4 rounded-2xl bg-gray-100 border-2 border-transparent text-[1.05rem] text-gray-400"
+                  className="w-full px-6 py-5 rounded-2xl bg-gray-100 border-2 border-gray-300 text-[1.1rem] text-gray-400"
                 />
               )}
-              <p className="text-[0.75rem] text-text-light mt-1">
-                Start typing your address and select from the dropdown
+              <p className="text-[0.82rem] text-text-light font-medium">
+                💡 Start typing and select your address from the dropdown
               </p>
             </div>
 
@@ -171,6 +172,41 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
           </div>
         </div>
       </div>
-    </LoadScript>
+      </LoadScript>
+
+      {/* Ensure Google Autocomplete dropdown is visible */}
+      <style jsx global>{`
+        .pac-container {
+          z-index: 9999 !important;
+          margin-top: 4px;
+          border-radius: 12px;
+          border: 1px solid #CBD5E1;
+          box-shadow: 0 8px 24px rgba(30, 58, 90, 0.15);
+          font-family: 'Outfit', sans-serif;
+        }
+        .pac-item {
+          padding: 12px 16px;
+          font-size: 1rem;
+          border-top: 1px solid #E5E7EB;
+          cursor: pointer;
+        }
+        .pac-item:first-child {
+          border-top: none;
+        }
+        .pac-item:hover {
+          background-color: #FEF3C7;
+        }
+        .pac-item-selected {
+          background-color: #FEF3C7;
+        }
+        .pac-matched {
+          font-weight: 600;
+          color: #1E3A5A;
+        }
+        .pac-icon {
+          display: none;
+        }
+      `}</style>
+    </>
   );
 }
