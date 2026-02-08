@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Lumen Solar Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --navy: #1E3A5A;
+  --navy-deep: #142942;
+  --navy-light: #2A5078;
+  --gold: #F59E0B;
+  --gold-light: #FBD38D;
+  --gold-pale: #FEF3C7;
+  --warm-white: #FFFBF5;
+  --warm-bg: #FFF8EE;
+  --cream: #FDF6EC;
+  --text: #334155;
+  --text-light: #64748B;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 3px rgba(30,58,90,0.06);
+  --shadow-md: 0 4px 20px rgba(30,58,90,0.08);
+  --shadow-lg: 0 12px 40px rgba(30,58,90,0.12);
+  --shadow-xl: 0 24px 60px rgba(30,58,90,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; color: var(--navy); line-height: 1.2; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(30,58,90,0.06);
+  transition: all 0.4s ease;
+}
+nav.scrolled { box-shadow: var(--shadow-md); }
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 72px;
+}
+.nav-logo { display: flex; align-items: center; text-decoration: none; }
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.nav-logo-lumen { font-family: 'DM Serif Display', serif; font-size: 1.65rem; color: var(--navy); font-weight: 400; letter-spacing: 1px; white-space: nowrap; }
+.nav-logo-sub { font-family: 'Outfit', sans-serif; font-size: 0.52rem; color: var(--gold); letter-spacing: 4.8px; text-transform: uppercase; font-weight: 700; margin-top: 2px; white-space: nowrap; }
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a {
+  text-decoration: none; color: var(--text); font-size: 0.9rem; font-weight: 500;
+  transition: color 0.3s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+  background: var(--gold); transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--navy); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--navy); font-weight: 600; }
+.nav-links a.active::after { width: 100%; }
+.nav-cta {
+  background: var(--navy); color: var(--white) !important; padding: 10px 22px;
+  border-radius: 50px; font-weight: 600; font-size: 0.85rem;
+  transition: all 0.3s ease; border: 2px solid var(--navy);
+}
+.nav-cta:hover { background: transparent; color: var(--navy) !important; }
+.nav-cta::after { display: none !important; }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 24px; height: 2px; background: var(--navy); margin: 5px 0; transition: all 0.3s; border-radius: 2px; }
+
+/* PAGE HERO */
+.page-hero {
+  padding: 140px 0 80px;
+  background: linear-gradient(165deg, var(--warm-white) 0%, var(--cream) 40%, var(--warm-bg) 100%);
+  position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; top: -20%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.page-hero .section-tag { margin-bottom: 16px; }
+.page-hero h1 { font-size: 3rem; margin-bottom: 18px; max-width: 700px; }
+.page-hero h1 em { font-style: italic; color: var(--gold); }
+.page-hero p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; line-height: 1.8; }
+
+/* SHARED */
+.section-tag {
+  font-size: 0.8rem; font-weight: 700; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 2px; display: block;
+}
+.section-header { text-align: center; max-width: 640px; margin: 0 auto 72px; }
+.section-header h2 { font-size: 2.8rem; margin-bottom: 18px; }
+.section-header p { font-size: 1.05rem; color: var(--text-light); }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--navy); font-weight: 700;
+  padding: 16px 32px; border-radius: 50px; text-decoration: none;
+  font-size: 1rem; transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.3); border: none; cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.4); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--navy); font-weight: 600;
+  padding: 16px 28px; border-radius: 50px; text-decoration: none;
+  font-size: 0.95rem; border: 2px solid var(--navy); transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif; cursor: pointer;
+}
+.btn-secondary:hover { background: var(--navy); color: var(--white); }
+
+/* FOOTER */
+footer {
+  background: var(--navy-deep); color: rgba(255,255,255,0.7); padding: 72px 0 36px;
+}
+.footer-inner {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;
+}
+.footer-brand .footer-logo-text { display: flex; flex-direction: column; line-height: 1.15; margin-bottom: 16px; }
+.footer-brand .footer-logo-lumen { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--white); font-weight: 400; letter-spacing: 1.5px; white-space: nowrap; }
+.footer-brand .footer-logo-sub { font-family: 'Outfit', sans-serif; font-size: 0.6rem; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-top: 2px; white-space: nowrap; }
+.footer-brand p { font-size: 0.9rem; line-height: 1.7; max-width: 300px; }
+.footer-col h4 {
+  font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 700;
+  color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;
+}
+.footer-col a {
+  display: block; color: rgba(255,255,255,0.6); text-decoration: none;
+  font-size: 0.9rem; margin-bottom: 12px; transition: color 0.3s;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 28px; display: flex; justify-content: space-between;
+  align-items: center; font-size: 0.82rem;
+}
+
+/* CHAT WIDGET */
+.chat-widget { position: fixed; bottom: 28px; right: 28px; z-index: 999; }
+.chat-btn {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--gold); border: none; cursor: pointer;
+  box-shadow: 0 6px 30px rgba(245,158,11,0.4);
+  transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
+  animation: chatPulse 3s ease infinite;
+}
+.chat-btn:hover { transform: scale(1.08); box-shadow: 0 8px 40px rgba(245,158,11,0.5); }
+.chat-btn svg { width: 36px; height: 36px; }
+
+/* REVEAL */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@keyframes chatPulse {
+  0%, 100% { box-shadow: 0 6px 30px rgba(245,158,11,0.4); }
+  50% { box-shadow: 0 6px 30px rgba(245,158,11,0.2), 0 0 0 12px rgba(245,158,11,0.08); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: block; }
+  .page-hero h1 { font-size: 2.2rem; }
+  .section-header h2 { font-size: 2.2rem; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 480px) {
+  .page-hero h1 { font-size: 1.8rem; }
+  .footer-inner { grid-template-columns: 1fr; }
+}
+
+
+.contact-main { padding: 80px 0 120px; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; max-width: 960px; margin: 0 auto; }
+.contact-info h3 { font-size: 1.4rem; margin-bottom: 14px; margin-top: 32px; }
+.contact-info h3:first-child { margin-top: 0; }
+.contact-info p { font-size: 0.95rem; color: var(--text-light); line-height: 1.8; margin-bottom: 12px; }
+.contact-method {
+  display: flex; gap: 14px; align-items: center; padding: 16px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.contact-method:last-child { border-bottom: none; }
+.cm-icon {
+  width: 44px; height: 44px; border-radius: 12px; background: var(--gold-pale);
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+}
+.cm-text .cm-label { font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+.cm-text .cm-value { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+
+.contact-form {
+  background: var(--white); padding: 40px; border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl); border: 1px solid rgba(245,158,11,0.08);
+}
+.contact-form h3 { font-size: 1.4rem; margin-bottom: 24px; }
+.contact-form .form-group { margin-bottom: 20px; }
+.contact-form label {
+  display: block; font-weight: 600; font-size: 0.8rem; color: var(--navy);
+  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+}
+.contact-form input, .contact-form textarea {
+  width: 100%; padding: 14px 18px; border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem; outline: none; transition: border-color 0.3s; background: var(--warm-white);
+}
+.contact-form input:focus, .contact-form textarea:focus { border-color: var(--gold); }
+.contact-form textarea { min-height: 120px; resize: vertical; }
+
+@media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-text">
+        <span class="nav-logo-lumen">LUMEN</span>
+        <span class="nav-logo-sub">SOLAR CONCIERGE</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="your-report.html">Your Report</a></li>
+      <li><a href="local-installers.html">Local Installers</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="#" class="nav-cta">Chat with Lumen Now</a></li>
+    </ul>
+    <button class="mobile-toggle" onclick="this.classList.toggle('active')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-tag" style="animation: fadeInUp 0.6s ease both;">Contact</span>
+    <h1 style="animation: fadeInUp 0.6s ease 0.1s both;">Get in touch with <em>Lumen.</em></h1>
+    <p style="animation: fadeInUp 0.6s ease 0.2s both;">Have a question, partnership inquiry, or just want to say hello? We'd love to hear from you.</p>
+  </div>
+</section>
+
+<section class="contact-main">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Talk to Lumen</h3>
+        <p>The fastest way to get answers is to chat with Lumen directly using the chat widget on this page — or use any of the methods below.</p>
+
+        <div class="contact-method">
+          <div class="cm-icon">📧</div>
+          <div class="cm-text"><div class="cm-label">Email</div><div class="cm-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87efe2ebebe8c7ebf2eae2e9f4e8ebe6f5a9e2e9e2f5e0fe">[email&#160;protected]</a></div></div>
+        </div>
+        <div class="contact-method">
+          <div class="cm-icon">📞</div>
+          <div class="cm-text"><div class="cm-label">Phone</div><div class="cm-value">(312) 555-SOLAR</div></div>
+        </div>
+        <div class="contact-method">
+          <div class="cm-icon">📍</div>
+          <div class="cm-text"><div class="cm-label">Serving</div><div class="cm-value">Homeowners across Illinois</div></div>
+        </div>
+
+        <h3>For Installers</h3>
+        <p>Interested in joining Lumen's installer network? We're always looking for quality solar pros. Send us a note with your company details and we'll be in touch.</p>
+      </div>
+
+      <div class="contact-form reveal">
+        <h3>Send us a message</h3>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="you@email.com">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="What's this about?">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us what's on your mind..."></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%; justify-content: center;">Send Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-text">
+          <span class="footer-logo-lumen">LUMEN</span>
+          <span class="footer-logo-sub">SOLAR CONCIERGE</span>
+        </div>
+        <p>Your personal guide to going solar. Lumen analyzes your home, shops for the best installer, and protects your privacy — so you can go solar with confidence.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="your-report.html">Your Report</a>
+        <a href="local-installers.html">Local Installers</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About Lumen</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get Started</h4>
+        <a href="your-report.html">Free Solar Report</a>
+        <a href="#">Chat with Lumen</a>
+        <a href="local-installers.html">Find Installers</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Lumen Solar Concierge. All rights reserved.</span>
+      <span>Smart solar guidance, powered by AI.</span>
+    </div>
+  </div>
+</footer>
+<div class="chat-widget">
+  <button class="chat-btn" title="Chat with Lumen">
+    <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="22" fill="#1E3A5A"/>
+      <g stroke="#1E3A5A" stroke-width="4" stroke-linecap="round">
+        <line x1="50" y1="18" x2="50" y2="24"/><line x1="50" y1="76" x2="50" y2="82"/>
+        <line x1="18" y1="50" x2="24" y2="50"/><line x1="76" y1="50" x2="82" y2="50"/>
+        <line x1="27.4" y1="27.4" x2="31.6" y2="31.6"/><line x1="68.4" y1="68.4" x2="72.6" y2="72.6"/>
+        <line x1="72.6" y1="27.4" x2="68.4" y2="31.6"/><line x1="31.6" y1="68.4" x2="27.4" y2="72.6"/>
+      </g>
+      <path d="M76 20 L78 26 L84 28 L78 30 L76 36 L74 30 L68 28 L74 26 Z" fill="#1E3A5A"/>
+      <path d="M24 64 L25.5 68 L29.5 69.5 L25.5 71 L24 75 L22.5 71 L18.5 69.5 L22.5 68 Z" fill="#1E3A5A" opacity="0.7"/>
+    </svg>
+  </button>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); });
+function alignLogoText() {
+  document.querySelectorAll('.nav-logo-text, .footer-logo-text').forEach(container => {
+    const lumen = container.querySelector('.nav-logo-lumen, .footer-logo-lumen');
+    const sub = container.querySelector('.nav-logo-sub, .footer-logo-sub');
+    if (!lumen || !sub) return;
+    const targetWidth = lumen.offsetWidth;
+    sub.style.letterSpacing = '0px';
+    const baseWidth = sub.offsetWidth;
+    const text = sub.textContent.replace(/\s/g, '');
+    const gaps = text.length - 1;
+    if (gaps > 0 && targetWidth > baseWidth) {
+      sub.style.letterSpacing = ((targetWidth - baseWidth) / gaps) + 'px';
+    }
+  });
+}
+document.fonts.ready.then(alignLogoText);
+window.addEventListener('resize', alignLogoText);
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e

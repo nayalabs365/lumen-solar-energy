@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Started — Lumen Solar Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #1E3A5A;
+  --navy-deep: #142942;
+  --navy-light: #2A5078;
+  --gold: #F59E0B;
+  --gold-light: #FBD38D;
+  --gold-pale: #FEF3C7;
+  --warm-white: #FFFBF5;
+  --warm-bg: #FFF8EE;
+  --cream: #FDF6EC;
+  --text: #334155;
+  --text-light: #64748B;
+  --white: #FFFFFF;
+  --green: #22C55E;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; color: var(--navy); line-height: 1.2; }
+
+/* ========== TOP BAR ========== */
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(30,58,90,0.06);
+  padding: 0 48px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tb-logo { display: flex; flex-direction: column; line-height: 1.1; text-decoration: none; }
+.tb-logo-main { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); letter-spacing: 0.5px; }
+.tb-logo-sub { font-family: 'Outfit', sans-serif; font-size: 0.42rem; color: var(--gold); text-transform: uppercase; font-weight: 700; letter-spacing: 4px; margin-top: 1px; }
+.tb-exit {
+  font-size: 0.85rem; color: var(--text-light); text-decoration: none;
+  display: flex; align-items: center; gap: 6px; transition: color 0.3s;
+}
+.tb-exit:hover { color: var(--navy); }
+
+/* ========== PROGRESS BAR ========== */
+.progress-bar {
+  position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px 48px; background: var(--white);
+  gap: 12px;
+}
+.progress-step-label {
+  font-size: 0.82rem; font-weight: 600; color: var(--text-light);
+  min-width: 28px; text-align: center;
+  transition: color 0.3s;
+}
+.progress-step-label.active { color: var(--navy); }
+.progress-track {
+  flex: 1; max-width: 480px; height: 4px; background: #E5E7EB;
+  border-radius: 4px; position: relative; overflow: visible;
+  display: flex; gap: 8px;
+}
+.progress-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #E5E7EB; transition: all 0.4s ease; position: relative; flex-shrink: 0;
+  margin-top: -3px;
+}
+.progress-dot.active { background: var(--gold); }
+.progress-dot.completed { background: var(--gold); }
+.progress-segment {
+  flex: 1; height: 4px; background: #E5E7EB; border-radius: 4px;
+  position: relative; overflow: hidden;
+}
+.progress-segment-fill {
+  position: absolute; top: 0; left: 0; bottom: 0; width: 0%;
+  background: var(--gold); border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.progress-segment.completed .progress-segment-fill { width: 100%; }
+.progress-segment.active .progress-segment-fill { width: 50%; }
+
+/* ========== MAIN LAYOUT ========== */
+.form-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: 100vh; padding-top: 120px;
+}
+
+/* LEFT: VISUAL */
+.form-visual {
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px; position: relative; overflow: hidden;
+}
+.visual-panel {
+  width: 100%; max-width: 600px; aspect-ratio: 4/3;
+  border-radius: var(--radius-lg); overflow: hidden;
+  position: relative;
+}
+.visual-slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(0.96);
+  transition: all 0.5s ease; pointer-events: none;
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.visual-slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+.visual-slide svg { width: 100%; height: 100%; }
+
+/* Illustration backgrounds */
+.vis-bg {
+  width: 100%; height: 100%;
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+}
+.vis-bg-1 { background: linear-gradient(135deg, #e8f0f8 0%, #d1e3f3 50%, #c5d9ef 100%); }
+.vis-bg-2 { background: linear-gradient(135deg, #e8f4ee 0%, #d1ebdf 50%, #c0e3d0 100%); }
+.vis-bg-3 { background: linear-gradient(135deg, #fef7e6 0%, #fcefc4 50%, #fbe7a0 100%); }
+.vis-bg-4 { background: linear-gradient(135deg, #f0e8f8 0%, #e1d3f0 50%, #d5c4ea 100%); }
+
+/* RIGHT: FORM */
+.form-content {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 60px 80px 60px 60px; position: relative;
+}
+
+/* STEPS */
+.step {
+  position: absolute; left: 60px; right: 80px; top: 50%; transform: translateY(-50%);
+  opacity: 0; pointer-events: none;
+  transition: all 0.45s ease;
+}
+.step.active {
+  opacity: 1; pointer-events: auto;
+  animation: stepIn 0.45s ease both;
+}
+.step.exit {
+  animation: stepOut 0.3s ease both;
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(40px); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+@keyframes stepOut {
+  from { opacity: 1; transform: translateY(-50%) translateX(0); }
+  to { opacity: 0; transform: translateY(-50%) translateX(-40px); }
+}
+
+.step h2 {
+  font-size: 2.2rem; margin-bottom: 32px; max-width: 400px;
+}
+.step h2 em { font-style: italic; color: var(--gold); }
+
+/* FORM ELEMENTS */
+.field-group { margin-bottom: 24px; }
+.field-label {
+  font-weight: 600; font-size: 0.78rem; color: var(--navy);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: block;
+}
+.field-label .required { color: var(--gold); margin-left: 2px; }
+.field-input {
+  width: 100%; padding: 18px 22px; border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif;
+  font-size: 1rem; outline: none; background: var(--warm-white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.field-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.08);
+}
+.field-input::placeholder { color: #B8C4D0; }
+
+/* Radio options */
+.radio-group { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.radio-option {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 22px; border: 2px solid #E5E7EB; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.25s ease; background: var(--white);
+}
+.radio-option:hover { border-color: var(--gold-light); background: var(--warm-white); }
+.radio-option.selected { border-color: var(--gold); background: var(--gold-pale); }
+.radio-dot {
+  width: 22px; height: 22px; border-radius: 50%; border: 2px solid #CBD5E1;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s; flex-shrink: 0;
+}
+.radio-option.selected .radio-dot { border-color: var(--gold); }
+.radio-dot-inner {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--gold);
+  transform: scale(0); transition: transform 0.25s;
+}
+.radio-option.selected .radio-dot-inner { transform: scale(1); }
+.radio-option span { font-size: 1rem; font-weight: 500; color: var(--navy); }
+
+/* Icon select grid */
+.icon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.icon-option {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 28px 16px; border: 2px solid #E5E7EB; border-radius: var(--radius);
+  cursor: pointer; transition: all 0.25s; background: var(--white); gap: 10px;
+}
+.icon-option:hover { border-color: var(--gold-light); background: var(--warm-white); }
+.icon-option.selected { border-color: var(--gold); background: var(--gold-pale); }
+.icon-option svg { width: 40px; height: 40px; transition: transform 0.25s; }
+.icon-option:hover svg { transform: scale(1.08); }
+.icon-option span { font-size: 0.88rem; font-weight: 600; color: var(--navy); text-align: center; }
+
+/* Slider */
+.bill-slider-wrap {
+  background: var(--warm-white); border: 2px solid #E5E7EB;
+  border-radius: var(--radius); padding: 32px 28px; transition: border-color 0.3s;
+}
+.bill-slider-wrap:hover { border-color: var(--gold-light); }
+.bill-display {
+  text-align: center; margin-bottom: 24px;
+}
+.bill-amount {
+  font-family: 'DM Serif Display', serif; font-size: 3.4rem; color: var(--navy);
+  line-height: 1;
+}
+.bill-amount .dollar { font-size: 2rem; vertical-align: super; margin-right: 2px; color: var(--gold); }
+.bill-per { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
+input[type="range"] {
+  width: 100%; height: 6px; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--gold) 40%, #E5E7EB 40%);
+  border-radius: 10px; outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--white); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30,58,90,0.15), 0 0 0 3px var(--gold);
+  transition: box-shadow 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 12px rgba(30,58,90,0.2), 0 0 0 4px var(--gold);
+}
+.bill-range-labels {
+  display: flex; justify-content: space-between; margin-top: 10px;
+  font-size: 0.75rem; color: var(--text-light);
+}
+
+/* Form row */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Consent */
+.consent-row {
+  display: flex; gap: 12px; align-items: flex-start; margin-top: 20px;
+}
+.consent-check {
+  width: 22px; height: 22px; border-radius: 6px; border: 2px solid #CBD5E1;
+  flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s; margin-top: 2px;
+}
+.consent-check.checked { background: var(--gold); border-color: var(--gold); }
+.consent-check svg { opacity: 0; transition: opacity 0.2s; }
+.consent-check.checked svg { opacity: 1; }
+.consent-text { font-size: 0.78rem; color: var(--text-light); line-height: 1.5; }
+
+/* BUTTONS */
+.btn-continue {
+  width: 100%; padding: 20px; border-radius: 50px; border: none;
+  font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; transition: all 0.3s ease; margin-top: 28px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-continue.primary {
+  background: var(--navy); color: var(--white);
+}
+.btn-continue.primary:hover { background: var(--navy-deep); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(30,58,90,0.2); }
+.btn-continue.primary:disabled {
+  background: #CBD5E1; cursor: not-allowed; transform: none; box-shadow: none;
+}
+.btn-continue.submit {
+  background: var(--gold); color: var(--navy);
+}
+.btn-continue.submit:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(245,158,11,0.35); }
+.btn-continue.submit:disabled {
+  background: #CBD5E1; color: var(--white); cursor: not-allowed; transform: none; box-shadow: none;
+}
+
+.btn-back {
+  background: none; border: none; font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem; color: var(--text-light); cursor: pointer;
+  display: flex; align-items: center; gap: 6px; padding: 8px 0;
+  transition: color 0.3s; margin-top: 14px; justify-content: center;
+}
+.btn-back:hover { color: var(--navy); }
+
+.secure-note {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 0.78rem; color: var(--text-light); margin-top: 16px;
+}
+
+/* ========== SUCCESS STATE ========== */
+/* ========== SOLAR REPORT PAGE ========== */
+.report-view {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: var(--navy-deep); overflow-y: auto;
+}
+.report-view.active { display: block; }
+.rpt-container { max-width: 1100px; margin: 0 auto; padding: 0 32px; position: relative; }
+
+.rpt-hero {
+  background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+  padding: 80px 0 60px; text-align: center; position: relative; overflow: hidden;
+}
+.rpt-hero::before {
+  content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.rpt-tag { font-size: 0.78rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 16px; animation: fadeUp 0.5s ease both; }
+.rpt-hero h1 { font-family: 'DM Serif Display', serif; font-size: 3rem; color: var(--white); margin-bottom: 14px; animation: fadeUp 0.5s ease both 0.1s; }
+.rpt-hero h1 em { color: var(--gold); font-style: italic; }
+.rpt-hero .rpt-sub { font-size: 1.05rem; color: rgba(255,255,255,0.6); max-width: 580px; margin: 0 auto 40px; line-height: 1.7; animation: fadeUp 0.5s ease both 0.2s; }
+
+.rpt-overview {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 36px; animation: fadeUp 0.6s ease both 0.3s;
+}
+.rpt-overview-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+.rpt-overview-top h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--white); }
+.rpt-address { font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-top: 4px; }
+.rpt-savings-badge { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: var(--radius); padding: 16px 22px; text-align: right; }
+.rpt-savings-num { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--gold); line-height: 1; }
+.rpt-savings-lbl { font-size: 0.75rem; color: var(--gold); opacity: 0.8; margin-top: 3px; }
+.rpt-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rpt-stat { background: rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px; }
+.rpt-stat-top { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: rgba(255,255,255,0.45); font-weight: 500; margin-bottom: 10px; }
+.rpt-stat-top svg { width: 15px; height: 15px; opacity: 0.5; }
+.rpt-stat-val { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--white); }
+.rpt-btns { display: flex; gap: 14px; justify-content: center; margin-top: 32px; animation: fadeUp 0.5s ease both 0.4s; }
+.rpt-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 26px; border-radius: 50px; border: 1.5px solid rgba(255,255,255,0.15);
+  background: transparent; color: var(--white); font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none;
+}
+.rpt-btn:hover { border-color: var(--gold); color: var(--gold); }
+.rpt-btn svg { width: 15px; height: 15px; }
+
+.rpt-section { padding: 72px 0; }
+.rpt-section-dark { background: var(--navy-deep); }
+.rpt-section-navy { background: var(--navy); }
+.rpt-section-tag { font-size: 0.7rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 14px; }
+.rpt-section h2 { font-family: 'DM Serif Display', serif; font-size: 1.9rem; color: var(--white); margin-bottom: 10px; }
+.rpt-section .rpt-desc { font-size: 0.92rem; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 680px; margin-bottom: 28px; }
+
+/* Roof */
+.rpt-roof {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.rpt-roof-map { height: 300px; background: linear-gradient(135deg, #2a4a6b, #1a3550); display: flex; align-items: center; justify-content: center; position: relative; }
+.rpt-roof-ph { display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.4; }
+.rpt-roof-ph svg { width: 40px; height: 40px; }
+.rpt-roof-ph span { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+
+/* System options */
+.rpt-sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.rpt-sys-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg); padding: 28px; position: relative; transition: all 0.3s;
+}
+.rpt-sys-card:hover { border-color: rgba(255,255,255,0.15); }
+.rpt-sys-card.rec { border-color: rgba(245,158,11,0.35); }
+.rpt-badge { position: absolute; top: 18px; right: 18px; background: var(--gold); color: var(--navy); font-size: 0.7rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; }
+.rpt-sys-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--white); margin-bottom: 10px; }
+.rpt-sys-card p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 20px; }
+.rpt-sys-vis { background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.rpt-sys-vis svg { opacity: 0.3; }
+.rpt-specs { display: flex; gap: 10px; }
+.rpt-spec { flex: 1; background: rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 12px; }
+.rpt-spec-v { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--white); }
+.rpt-spec-l { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+/* Chart */
+.rpt-chart-wrap { display: grid; grid-template-columns: 5fr 3fr; gap: 28px; align-items: center; }
+.rpt-chart {
+  background: rgba(255,255,255,0.04); border-radius: var(--radius);
+  padding: 24px; height: 280px; display: flex; align-items: flex-end; gap: 3px; justify-content: center;
+}
+.rpt-bar-g { display: flex; gap: 2px; align-items: flex-end; flex: 1; }
+.rpt-bar { flex: 1; border-radius: 2px 2px 0 0; min-width: 3px; }
+.rpt-legend { display: flex; flex-direction: column; gap: 24px; }
+.rpt-legend-item h4 { font-family: 'Outfit', sans-serif; font-size: 0.92rem; color: var(--white); font-weight: 600; margin-bottom: 6px; }
+.rpt-legend-bar { height: 5px; border-radius: 3px; margin-bottom: 5px; }
+.rpt-legend-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+/* Next steps */
+.rpt-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; }
+.rpt-step-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 22px; }
+.rpt-step-num {
+  width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 14px;
+}
+.rpt-step-card p { font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
+
+/* Report footer */
+.rpt-footer { padding: 56px 0; background: var(--navy-deep); text-align: center; border-top: 1px solid rgba(255,255,255,0.06); }
+.rpt-footer-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: var(--navy); font-weight: 700;
+  padding: 18px 36px; border-radius: 50px; text-decoration: none;
+  font-size: 1rem; transition: all 0.3s; font-family: 'Outfit', sans-serif;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.3); border: none; cursor: pointer;
+}
+.rpt-footer-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.4); }
+.rpt-footer-btn svg { width: 18px; height: 18px; }
+.rpt-footer-note { font-size: 0.8rem; color: rgba(255,255,255,0.3); margin-top: 18px; }
+
+@media (max-width: 768px) {
+  .rpt-hero h1 { font-size: 2.2rem; }
+  .rpt-stats { grid-template-columns: 1fr; }
+  .rpt-sys-grid { grid-template-columns: 1fr; }
+  .rpt-chart-wrap { grid-template-columns: 1fr; }
+  .rpt-steps { grid-template-columns: 1fr 1fr; }
+  .rpt-btns { flex-direction: column; align-items: center; }
+  .rpt-overview-top { flex-direction: column; }
+}
+@media (max-width: 480px) { .rpt-steps { grid-template-columns: 1fr; } }
+
+/* ========== SAVINGS BY PAYMENT TYPE ========== */
+.rpt-payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.rpt-pay-card {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg); padding: 28px; text-align: center; transition: all 0.3s;
+}
+.rpt-pay-card:hover { border-color: rgba(255,255,255,0.18); }
+.rpt-pay-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--white); margin-bottom: 6px; }
+.rpt-pay-sub { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+.rpt-pay-amount { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: var(--gold); margin-bottom: 20px; }
+.rpt-pay-perks { list-style: none; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.rpt-pay-perks li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.65); }
+.rpt-pay-check {
+  width: 20px; height: 20px; border-radius: 50%; background: rgba(34,197,94,0.15);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.rpt-pay-check svg { width: 11px; height: 11px; }
+.rpt-pay-note {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm); padding: 18px 22px; margin-top: 24px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.35); line-height: 1.6;
+}
+.rpt-pay-note strong { color: rgba(255,255,255,0.5); }
+.rpt-pay-cta {
+  margin-top: 28px; background: rgba(245,158,11,0.08); border: 1.5px solid rgba(245,158,11,0.25);
+  border-radius: var(--radius-lg); padding: 28px; text-align: center;
+}
+.rpt-pay-cta p { font-size: 1rem; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 16px; }
+.rpt-pay-cta strong { color: var(--gold); }
+.rpt-pay-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); color: var(--navy); font-weight: 700; font-family: 'Outfit', sans-serif;
+  padding: 14px 30px; border-radius: 50px; border: none; cursor: pointer;
+  font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 4px 16px rgba(245,158,11,0.25);
+}
+.rpt-pay-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245,158,11,0.35); }
+@media (max-width: 768px) { .rpt-payment-grid { grid-template-columns: 1fr; } }
+
+/* ========== ENVIRONMENTAL IMPACT ========== */
+.rpt-env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.rpt-env-card {
+  background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.12);
+  border-radius: var(--radius-lg); padding: 28px; text-align: center;
+}
+.rpt-env-icon {
+  width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+.rpt-env-icon.green { background: rgba(34,197,94,0.12); }
+.rpt-env-icon.gold { background: rgba(245,158,11,0.12); }
+.rpt-env-icon svg { width: 24px; height: 24px; }
+.rpt-env-val { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--green); margin-bottom: 4px; }
+.rpt-env-card:nth-child(4) .rpt-env-val { color: var(--gold); }
+.rpt-env-label { font-size: 0.88rem; color: rgba(255,255,255,0.6); font-weight: 600; }
+.rpt-env-sub { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.rpt-env-note {
+  background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.08);
+  border-radius: var(--radius-sm); padding: 18px 22px; margin-top: 24px;
+}
+.rpt-env-note strong { font-size: 0.82rem; color: rgba(255,255,255,0.55); display: block; margin-bottom: 6px; }
+.rpt-env-note-list { font-size: 0.75rem; color: rgba(255,255,255,0.3); line-height: 1.8; }
+
+/* ========== CHAT WIDGET ========== */
+.chat-widget {
+  position: fixed; bottom: 28px; right: 28px; z-index: 180;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.chat-widget.hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
+.chat-btn {
+  width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--gold); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.35);
+  transition: all 0.3s; position: relative;
+}
+.chat-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(245,158,11,0.45); }
+.chat-btn svg { width: 28px; height: 28px; }
+.chat-pulse {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid var(--gold); opacity: 0;
+  animation: chatPulse 2.5s ease infinite;
+}
+@keyframes chatPulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+.chat-tooltip {
+  position: absolute; bottom: 70px; right: 0; white-space: nowrap;
+  background: var(--white); color: var(--navy); font-size: 0.82rem; font-weight: 600;
+  padding: 10px 16px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  opacity: 0; transform: translateY(8px); transition: all 0.3s;
+  pointer-events: none;
+}
+.chat-tooltip::after {
+  content: ''; position: absolute; bottom: -6px; right: 20px;
+  width: 12px; height: 12px; background: var(--white);
+  transform: rotate(45deg); box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+}
+.chat-btn:hover + .chat-tooltip,
+.chat-tooltip.show { opacity: 1; transform: translateY(0); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== PROCESSING LOADER ========== */
+.loader-view {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: var(--white);
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 40px;
+}
+.loader-view.active { display: flex; }
+
+.loader-ring {
+  width: 140px; height: 140px; position: relative; margin-bottom: 32px;
+}
+.loader-ring-bg {
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 5px solid #E5E7EB; position: absolute; inset: 0;
+}
+.loader-ring-fill {
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 5px solid transparent; border-top-color: var(--gold);
+  position: absolute; inset: 0;
+  animation: loaderSpin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+.loader-ring-fill2 {
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 5px solid transparent; border-top-color: var(--gold); border-right-color: var(--gold);
+  position: absolute; inset: 0; opacity: 0;
+  animation: loaderSpin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite, loaderFillIn 3s ease forwards;
+}
+.loader-icon {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}
+.loader-icon-inner {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--gold); display: flex; align-items: center; justify-content: center;
+  animation: loaderPulse 2s ease infinite;
+}
+.loader-icon-inner svg { width: 36px; height: 36px; }
+
+.loader-label {
+  font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--navy);
+  margin-bottom: 8px; animation: fadeUp 0.4s ease both 0.2s;
+}
+.loader-sublabel {
+  font-size: 0.92rem; color: var(--text-light); animation: fadeUp 0.4s ease both 0.4s;
+}
+
+/* Loader steps text cycling */
+.loader-steps {
+  margin-top: 40px; display: flex; flex-direction: column; gap: 12px;
+  animation: fadeUp 0.5s ease both 0.5s;
+}
+.loader-step-item {
+  display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--text-light);
+  opacity: 0; transform: translateX(-10px);
+  transition: all 0.4s ease;
+}
+.loader-step-item.visible { opacity: 1; transform: translateX(0); }
+.loader-step-item.done { color: var(--navy); }
+.loader-step-check {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #E5E7EB; transition: background 0.3s;
+}
+.loader-step-item.done .loader-step-check { background: var(--green); }
+.loader-step-check svg { width: 12px; height: 12px; opacity: 0; transition: opacity 0.3s; }
+.loader-step-item.done .loader-step-check svg { opacity: 1; }
+
+/* Spinner for processing inside loader-step-check */
+.loader-step-spinner {
+  width: 14px; height: 14px; border: 2px solid transparent;
+  border-top-color: var(--gold); border-radius: 50%;
+  animation: loaderSpin 0.8s linear infinite;
+}
+.loader-step-item.done .loader-step-spinner { display: none; }
+
+@keyframes loaderSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes loaderPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+@keyframes loaderFillIn {
+  0% { opacity: 0; }
+  40% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ========== OTP VERIFICATION ========== */
+.otp-view {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: var(--white);
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 40px;
+}
+.otp-view.active { display: flex; }
+.otp-container { max-width: 460px; width: 100%; }
+
+.otp-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold-pale); padding: 10px 20px; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 600; color: var(--gold);
+  margin-bottom: 28px; animation: fadeUp 0.4s ease both;
+}
+.otp-badge svg { width: 16px; height: 16px; }
+
+.otp-view h2 {
+  font-size: 2rem; margin-bottom: 12px; max-width: 420px;
+  animation: fadeUp 0.4s ease both 0.1s;
+}
+.otp-subtitle {
+  font-size: 0.95rem; color: var(--text-light); margin-bottom: 36px; line-height: 1.6;
+  animation: fadeUp 0.4s ease both 0.2s;
+}
+.otp-phone-display {
+  font-weight: 700; color: var(--navy);
+}
+
+.otp-input-group {
+  display: flex; gap: 12px; justify-content: center; margin-bottom: 32px;
+  animation: fadeUp 0.4s ease both 0.3s;
+}
+.otp-digit {
+  width: 64px; height: 72px; border: 2px solid #E5E7EB; border-radius: var(--radius-sm);
+  text-align: center; font-family: 'DM Serif Display', serif; font-size: 1.8rem;
+  color: var(--navy); outline: none; background: var(--warm-white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  caret-color: var(--gold);
+}
+.otp-digit:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 4px rgba(245,158,11,0.1);
+}
+.otp-digit.filled { border-color: var(--gold); background: var(--gold-pale); }
+.otp-digit.error { border-color: #EF4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.08); }
+
+.otp-actions { animation: fadeUp 0.4s ease both 0.4s; }
+.btn-verify {
+  width: 100%; padding: 20px; border-radius: 50px; border: none;
+  font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; transition: all 0.3s ease;
+  background: var(--navy); color: var(--white);
+}
+.btn-verify:hover { background: var(--navy-deep); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(30,58,90,0.2); }
+.btn-verify:disabled { background: #CBD5E1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.otp-resend {
+  margin-top: 20px; font-size: 0.88rem; color: var(--text-light);
+}
+.otp-resend a {
+  color: var(--navy); font-weight: 600; text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; transition: color 0.3s;
+}
+.otp-resend a:hover { color: var(--gold); }
+.otp-timer { font-weight: 600; color: var(--gold); }
+
+.otp-error-msg {
+  color: #EF4444; font-size: 0.85rem; font-weight: 500;
+  margin-bottom: 16px; display: none; animation: fadeUp 0.3s ease;
+}
+.otp-error-msg.visible { display: block; }
+
+@media (max-width: 480px) {
+  .otp-digit { width: 52px; height: 60px; font-size: 1.4rem; }
+  .otp-input-group { gap: 8px; }
+  .loader-ring { width: 110px; height: 110px; }
+  .loader-ring-bg, .loader-ring-fill, .loader-ring-fill2 { width: 110px; height: 110px; }
+  .loader-icon-inner { width: 64px; height: 64px; }
+  .loader-icon-inner svg { width: 28px; height: 28px; }
+}
+@media (max-width: 1024px) {
+  .form-content { padding: 60px 48px 60px 40px; }
+  .step { left: 40px; right: 48px; }
+  .step h2 { font-size: 1.8rem; }
+}
+@media (max-width: 768px) {
+  .form-layout { grid-template-columns: 1fr; min-height: auto; }
+  .form-visual { display: none; }
+  .form-content { padding: 40px 24px 60px; min-height: calc(100vh - 120px); }
+  .step { left: 24px; right: 24px; }
+  .step h2 { font-size: 1.6rem; }
+  .top-bar { padding: 0 20px; }
+  .progress-bar { padding: 16px 20px; }
+  .icon-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .icon-option { padding: 20px 12px; }
+  .bill-amount { font-size: 2.6rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .success-details { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="index.html" class="tb-logo">
+    <span class="tb-logo-main">LUMEN</span>
+    <span class="tb-logo-sub">SOLAR CONCIERGE</span>
+  </a>
+  <a href="index.html" class="tb-exit">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    Exit
+  </a>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar">
+  <span class="progress-step-label active" id="plabel">01</span>
+  <div class="progress-track" id="progressTrack">
+    <div class="progress-dot active" id="dot0"></div>
+    <div class="progress-segment" id="seg0"><div class="progress-segment-fill"></div></div>
+    <div class="progress-dot" id="dot1"></div>
+    <div class="progress-segment" id="seg1"><div class="progress-segment-fill"></div></div>
+    <div class="progress-dot" id="dot2"></div>
+    <div class="progress-segment" id="seg2"><div class="progress-segment-fill"></div></div>
+    <div class="progress-dot" id="dot3"></div>
+  </div>
+  <span class="progress-step-label" id="plabelEnd">04</span>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="form-layout">
+
+  <!-- LEFT: VISUALS -->
+  <div class="form-visual">
+    <div class="visual-panel">
+
+      <!-- Slide 1: House with address pin -->
+      <div class="visual-slide active" id="vis1">
+        <div class="vis-bg vis-bg-1">
+          <svg viewBox="0 0 600 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="340" width="600" height="110" fill="#86EFAC" opacity="0.3"/>
+            <!-- House -->
+            <rect x="170" y="210" width="260" height="130" rx="4" fill="white" stroke="#CBD5E1" stroke-width="1.5"/>
+            <polygon points="130,210 300,110 470,210" fill="var(--navy)" opacity="0.85"/>
+            <!-- Solar panels -->
+            <g opacity="0.6">
+              <rect x="195" y="140" width="45" height="30" rx="2" fill="#2A5078" transform="rotate(-28 217 155)"/>
+              <rect x="250" y="128" width="45" height="30" rx="2" fill="#2A5078" transform="rotate(-28 272 143)"/>
+              <rect x="325" y="140" width="45" height="30" rx="2" fill="#2A5078" transform="rotate(28 347 155)"/>
+              <rect x="375" y="130" width="45" height="30" rx="2" fill="#2A5078" transform="rotate(28 397 145)"/>
+            </g>
+            <!-- Door -->
+            <rect x="275" y="270" width="50" height="70" rx="4" fill="var(--navy)" opacity="0.7"/>
+            <circle cx="315" cy="308" r="3" fill="var(--gold)"/>
+            <!-- Windows -->
+            <rect x="195" y="240" width="50" height="40" rx="4" fill="#87CEEB" opacity="0.4" stroke="var(--navy)" stroke-width="1" stroke-opacity="0.3"/>
+            <line x1="220" y1="240" x2="220" y2="280" stroke="var(--navy)" stroke-width="0.5" opacity="0.3"/>
+            <rect x="355" y="240" width="50" height="40" rx="4" fill="#87CEEB" opacity="0.4" stroke="var(--navy)" stroke-width="1" stroke-opacity="0.3"/>
+            <line x1="380" y1="240" x2="380" y2="280" stroke="var(--navy)" stroke-width="0.5" opacity="0.3"/>
+            <!-- Map pin -->
+            <g transform="translate(300, 180)">
+              <path d="M0-35 C-14-35 -25-24 -25-12 C-25 4 0 20 0 20 C0 20 25 4 25-12 C25-24 14-35 0-35Z" fill="#EF4444" opacity="0.9"/>
+              <circle cx="0" cy="-14" r="8" fill="white" opacity="0.9"/>
+            </g>
+            <!-- Trees -->
+            <g transform="translate(80,260)"><rect x="12" y="35" width="10" height="30" rx="3" fill="#8B6914" opacity="0.5"/><ellipse cx="17" cy="28" rx="22" ry="28" fill="#22C55E" opacity="0.3"/></g>
+            <g transform="translate(490,270)"><rect x="12" y="30" width="10" height="25" rx="3" fill="#8B6914" opacity="0.5"/><ellipse cx="17" cy="24" rx="18" ry="24" fill="#22C55E" opacity="0.3"/></g>
+            <!-- Address text -->
+            <rect x="180" y="370" width="240" height="36" rx="18" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+            <rect x="200" y="382" width="100" height="6" rx="3" fill="#CBD5E1" opacity="0.5"/>
+            <circle x="420" y="388" r="4" fill="var(--gold)" cx="396" cy="388" opacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slide 2: Property types icons -->
+      <div class="visual-slide" id="vis2">
+        <div class="vis-bg vis-bg-2">
+          <svg viewBox="0 0 600 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- House type 1 -->
+            <g transform="translate(100,80)">
+              <rect x="20" y="80" width="160" height="100" rx="8" fill="white" opacity="0.9"/>
+              <polygon points="10,80 100,20 190,80" fill="var(--navy)" opacity="0.2"/>
+              <rect x="75" y="120" width="30" height="40" rx="3" fill="var(--navy)" opacity="0.2"/>
+              <rect x="40" y="110" width="25" height="25" rx="3" fill="#87CEEB" opacity="0.3"/>
+              <rect x="130" y="110" width="25" height="25" rx="3" fill="#87CEEB" opacity="0.3"/>
+              <circle cx="100" cy="60" r="24" fill="var(--gold)" opacity="0.2">
+                <animate attributeName="opacity" values="0.15;0.3;0.15" dur="3s" repeatCount="indefinite"/>
+              </circle>
+              <text x="100" y="200" text-anchor="middle" fill="var(--navy)" font-size="14" font-weight="600" font-family="Outfit, sans-serif" opacity="0.7">Single Family</text>
+            </g>
+            <!-- House type 2 -->
+            <g transform="translate(320,80)">
+              <rect x="20" y="60" width="160" height="120" rx="8" fill="white" opacity="0.9"/>
+              <rect x="20" y="60" width="80" height="120" rx="8 0 0 8" fill="white" opacity="0.85"/>
+              <line x1="100" y1="60" x2="100" y2="180" stroke="#CBD5E1" stroke-width="1"/>
+              <rect x="45" y="90" width="20" height="20" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="45" y="130" width="20" height="20" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="125" y="90" width="20" height="20" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="125" y="130" width="20" height="20" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <text x="100" y="200" text-anchor="middle" fill="var(--navy)" font-size="14" font-weight="600" font-family="Outfit, sans-serif" opacity="0.7">Townhome</text>
+            </g>
+            <!-- House type 3 -->
+            <g transform="translate(100,270)">
+              <rect x="30" y="40" width="140" height="60" rx="20" fill="white" opacity="0.9"/>
+              <rect x="60" y="48" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="90" y="48" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="120" y="48" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <circle cx="30" cy="100" r="8" fill="#CBD5E1" opacity="0.3"/>
+              <circle cx="170" cy="100" r="8" fill="#CBD5E1" opacity="0.3"/>
+              <text x="100" y="130" text-anchor="middle" fill="var(--navy)" font-size="14" font-weight="600" font-family="Outfit, sans-serif" opacity="0.7">Mobile Home</text>
+            </g>
+            <!-- House type 4 -->
+            <g transform="translate(320,260)">
+              <rect x="20" y="30" width="160" height="80" rx="8" fill="white" opacity="0.9"/>
+              <rect x="20" y="30" width="160" height="20" rx="8 8 0 0" fill="var(--navy)" opacity="0.15"/>
+              <rect x="40" y="60" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="65" y="60" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="90" y="60" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="115" y="60" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="140" y="60" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="40" y="84" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <rect x="65" y="84" width="16" height="16" rx="2" fill="#87CEEB" opacity="0.3"/>
+              <text x="100" y="130" text-anchor="middle" fill="var(--navy)" font-size="14" font-weight="600" font-family="Outfit, sans-serif" opacity="0.7">Commercial</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slide 3: Energy/savings visual -->
+      <div class="visual-slide" id="vis3">
+        <div class="vis-bg vis-bg-3">
+          <svg viewBox="0 0 600 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Sun -->
+            <circle cx="300" cy="80" r="50" fill="var(--gold)" opacity="0.2">
+              <animate attributeName="r" values="48;55;48" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="300" cy="80" r="30" fill="var(--gold)" opacity="0.3"/>
+            <!-- Rays -->
+            <g stroke="var(--gold)" stroke-width="2" stroke-linecap="round" opacity="0.25">
+              <line x1="300" y1="15" x2="300" y2="28"/>
+              <line x1="300" y1="132" x2="300" y2="145"/>
+              <line x1="235" y1="80" x2="248" y2="80"/>
+              <line x1="352" y1="80" x2="365" y2="80"/>
+            </g>
+            <!-- Energy flow arrow -->
+            <path d="M300 140 L300 200" stroke="var(--gold)" stroke-width="3" stroke-dasharray="8 4" opacity="0.4">
+              <animate attributeName="stroke-dashoffset" values="0;-24" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <!-- Bill card -->
+            <rect x="150" y="210" width="300" height="180" rx="20" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+            <text x="300" y="250" text-anchor="middle" fill="var(--text-light)" font-size="14" font-family="Outfit, sans-serif">Monthly Energy Bill</text>
+            <text x="300" y="300" text-anchor="middle" fill="var(--navy)" font-size="48" font-weight="700" font-family="DM Serif Display, serif">$180</text>
+            <!-- Savings badge -->
+            <rect x="220" y="325" width="160" height="40" rx="20" fill="var(--gold)" opacity="0.15"/>
+            <text x="300" y="350" text-anchor="middle" fill="var(--gold)" font-size="14" font-weight="700" font-family="Outfit, sans-serif">Save up to 87%</text>
+            <!-- Chart bars at bottom -->
+            <g opacity="0.3">
+              <rect x="170" y="400" width="24" height="30" rx="4" fill="var(--gold)" transform="translate(0,-10)"/>
+              <rect x="204" y="400" width="24" height="40" rx="4" fill="var(--gold)" transform="translate(0,-20)"/>
+              <rect x="238" y="400" width="24" height="35" rx="4" fill="var(--gold)" transform="translate(0,-15)"/>
+              <rect x="272" y="400" width="24" height="50" rx="4" fill="var(--navy)" opacity="0.6" transform="translate(0,-30)"/>
+              <rect x="306" y="400" width="24" height="45" rx="4" fill="var(--navy)" opacity="0.5" transform="translate(0,-25)"/>
+              <rect x="340" y="400" width="24" height="55" rx="4" fill="var(--green)" opacity="0.5" transform="translate(0,-35)"/>
+              <rect x="374" y="400" width="24" height="60" rx="4" fill="var(--green)" opacity="0.6" transform="translate(0,-40)"/>
+              <rect x="408" y="400" width="24" height="65" rx="4" fill="var(--green)" opacity="0.7" transform="translate(0,-45)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Slide 4: Privacy shield -->
+      <div class="visual-slide" id="vis4">
+        <div class="vis-bg vis-bg-4">
+          <svg viewBox="0 0 600 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shield -->
+            <path d="M300 60 L400 110 L400 240 C400 310 300 380 300 380 C300 380 200 310 200 240 L200 110 Z" fill="white" opacity="0.9" stroke="#E5E7EB" stroke-width="1.5"/>
+            <path d="M300 80 L380 120 L380 235 C380 295 300 355 300 355 C300 355 220 295 220 235 L220 120 Z" fill="var(--gold)" opacity="0.08"/>
+            <!-- Lock -->
+            <rect x="272" y="195" width="56" height="44" rx="8" fill="var(--navy)" opacity="0.8"/>
+            <path d="M282 195 L282 178 C282 164 290 156 300 156 C310 156 318 164 318 178 L318 195" stroke="var(--navy)" stroke-width="4" fill="none" opacity="0.6"/>
+            <circle cx="300" cy="215" r="6" fill="white" opacity="0.8"/>
+            <rect x="298" y="219" width="4" height="8" rx="2" fill="white" opacity="0.7"/>
+            <!-- Checkmarks around shield -->
+            <g opacity="0.5">
+              <circle cx="160" cy="160" r="16" fill="var(--green)" opacity="0.15"/>
+              <path d="M153 160 L158 165 L168 155" stroke="var(--green)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="440" cy="160" r="16" fill="var(--green)" opacity="0.15"/>
+              <path d="M433 160 L438 165 L448 155" stroke="var(--green)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="160" cy="280" r="16" fill="var(--green)" opacity="0.15"/>
+              <path d="M153 280 L158 285 L168 275" stroke="var(--green)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="440" cy="280" r="16" fill="var(--green)" opacity="0.15"/>
+              <path d="M433 280 L438 285 L448 275" stroke="var(--green)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+            <!-- Bottom text -->
+            <text x="300" y="420" text-anchor="middle" fill="var(--navy)" font-size="15" font-weight="600" font-family="Outfit, sans-serif" opacity="0.6">Your information stays with Lumen</text>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM STEPS -->
+  <div class="form-content">
+
+    <!-- STEP 1: Address + Ownership -->
+    <div class="step active" id="step1">
+      <h2>Where would you like to go <em>solar?</em></h2>
+      <div class="field-group">
+        <label class="field-label">Your Address <span class="required">*</span></label>
+        <input type="text" class="field-input" id="addressInput" placeholder="Enter your home address" autocomplete="street-address">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Ownership Status <span class="required">*</span></label>
+        <div class="radio-group">
+          <div class="radio-option" onclick="selectRadio(this, 'ownership')">
+            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+            <span>I own this home</span>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'ownership')">
+            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+            <span>I rent this home</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-continue primary" id="btn1" disabled onclick="goTo(2)">Continue</button>
+      <div class="secure-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Your info stays with Lumen. Always.
+      </div>
+    </div>
+
+    <!-- STEP 2: Property Type -->
+    <div class="step" id="step2">
+      <h2>What type of property is <em>this?</em></h2>
+      <div class="icon-grid">
+        <div class="icon-option" onclick="selectIcon(this)">
+          <svg viewBox="0 0 48 48" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 20 L24 6 L42 20"/><rect x="10" y="20" width="28" height="20" rx="2"/><rect x="19" y="28" width="10" height="12" rx="1"/>
+          </svg>
+          <span>Single Family Home</span>
+        </div>
+        <div class="icon-option" onclick="selectIcon(this)">
+          <svg viewBox="0 0 48 48" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="14" width="16" height="28" rx="2"/><rect x="26" y="14" width="16" height="28" rx="2"/>
+            <rect x="11" y="20" width="6" height="5" rx="1"/><rect x="11" y="30" width="6" height="5" rx="1"/>
+            <rect x="31" y="20" width="6" height="5" rx="1"/><rect x="31" y="30" width="6" height="5" rx="1"/>
+          </svg>
+          <span>Townhome / Duplex</span>
+        </div>
+        <div class="icon-option" onclick="selectIcon(this)">
+          <svg viewBox="0 0 48 48" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="20" width="36" height="16" rx="8"/><rect x="14" y="24" width="6" height="5" rx="1"/><rect x="24" y="24" width="6" height="5" rx="1"/>
+            <circle cx="12" cy="36" r="4"/><circle cx="36" cy="36" r="4"/><line x1="16" y1="36" x2="32" y2="36"/>
+          </svg>
+          <span>Mobile Home</span>
+        </div>
+        <div class="icon-option" onclick="selectIcon(this)">
+          <svg viewBox="0 0 48 48" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="10" width="32" height="32" rx="3"/><rect x="8" y="10" width="32" height="8" rx="3 3 0 0"/>
+            <rect x="14" y="24" width="5" height="5" rx="1"/><rect x="22" y="24" width="5" height="5" rx="1"/><rect x="30" y="24" width="5" height="5" rx="1"/>
+            <rect x="14" y="33" width="5" height="5" rx="1"/><rect x="22" y="33" width="5" height="5" rx="1"/>
+          </svg>
+          <span>Commercial</span>
+        </div>
+      </div>
+      <button class="btn-continue primary" id="btn2" disabled onclick="goTo(3)">Continue</button>
+      <button class="btn-back" onclick="goTo(1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19 5 12l7-7"/></svg>
+        Back
+      </button>
+    </div>
+
+    <!-- STEP 3: Monthly Bill -->
+    <div class="step" id="step3">
+      <h2>What's your monthly <em>energy bill?</em></h2>
+      <div class="bill-slider-wrap">
+        <div class="bill-display">
+          <div class="bill-amount"><span class="dollar">$</span><span id="billVal">180</span></div>
+          <div class="bill-per">per month</div>
+        </div>
+        <input type="range" min="30" max="500" value="180" id="billSlider" oninput="updateBill(this)">
+        <div class="bill-range-labels"><span>$30</span><span>$500+</span></div>
+      </div>
+      <button class="btn-continue primary" onclick="goTo(4)">Continue</button>
+      <button class="btn-back" onclick="goTo(2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19 5 12l7-7"/></svg>
+        Back
+      </button>
+    </div>
+
+    <!-- STEP 4: Contact Info -->
+    <div class="step" id="step4">
+      <h2>Almost there — how should Lumen <em>reach you?</em></h2>
+      <div class="field-group">
+        <label class="field-label">Full Name <span class="required">*</span></label>
+        <input type="text" class="field-input" id="nameInput" placeholder="First and last name" autocomplete="name">
+      </div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Email <span class="required">*</span></label>
+          <input type="email" class="field-input" id="emailInput" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Phone <span class="required">*</span></label>
+          <input type="tel" class="field-input" id="phoneInput" placeholder="(555) 123-4567" autocomplete="tel">
+        </div>
+      </div>
+      <div class="consent-row">
+        <div class="consent-check" onclick="toggleConsent(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="consent-text">We're here to help! Each time that you fill out this form, you agree to be contacted by phone call, pre-recorded voice, and/or text message at the telephone or mobile number that you entered above by Lumen Solar Concierge and by one (1) other company about solar and energy storage products and services. These calls/messages may be sent using automated telephone technology, even if your telephone or mobile number is currently listed on any state, federal or corporate "Do Not Call" list. Message and data rates may apply. You are not required to give your consent here as a condition of any purchase. I understand the <a href="privacy-policy.html" target="_blank" style="color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:2px;">Privacy Policy</a> and agree to the <a href="#" style="color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:2px;">Terms &amp; Conditions</a>.</span>
+      </div>
+      <button class="btn-continue submit" id="btn4" disabled onclick="submitForm()">
+        Get My Free Solar Report
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+      <button class="btn-back" onclick="goTo(3)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19 5 12l7-7"/></svg>
+        Back
+      </button>
+      <div class="secure-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Your information is never sold. Ever.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PROCESSING LOADER -->
+<div class="loader-view" id="loaderView">
+  <div class="loader-ring">
+    <div class="loader-ring-bg"></div>
+    <div class="loader-ring-fill"></div>
+    <div class="loader-ring-fill2"></div>
+    <div class="loader-icon">
+      <div class="loader-icon-inner">
+        <svg viewBox="0 0 48 48" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+          <circle cx="24" cy="24" r="8"/>
+          <line x1="24" y1="6" x2="24" y2="12"/><line x1="24" y1="36" x2="24" y2="42"/>
+          <line x1="6" y1="24" x2="12" y2="24"/><line x1="36" y1="24" x2="42" y2="24"/>
+          <line x1="11.3" y1="11.3" x2="15.5" y2="15.5"/><line x1="32.5" y1="32.5" x2="36.7" y2="36.7"/>
+          <line x1="36.7" y1="11.3" x2="32.5" y2="15.5"/><line x1="15.5" y1="32.5" x2="11.3" y2="36.7"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="loader-label">Analyzing your home</div>
+  <div class="loader-sublabel">This will only take a moment.</div>
+  <div class="loader-steps">
+    <div class="loader-step-item" id="ls1">
+      <div class="loader-step-check"><div class="loader-step-spinner"></div><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span>Locating your property</span>
+    </div>
+    <div class="loader-step-item" id="ls2">
+      <div class="loader-step-check"><div class="loader-step-spinner"></div><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span>Checking local sunlight data</span>
+    </div>
+    <div class="loader-step-item" id="ls3">
+      <div class="loader-step-check"><div class="loader-step-spinner"></div><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span>Calculating your savings estimate</span>
+    </div>
+  </div>
+</div>
+
+<!-- OTP VERIFICATION -->
+<div class="otp-view" id="otpView">
+  <div class="otp-container">
+    <div class="otp-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      High demand
+    </div>
+    <h2>Due to extremely high demand, we need to verify your phone number.</h2>
+    <p class="otp-subtitle">We'll send a 4-digit code to <span class="otp-phone-display" id="otpPhoneDisplay">(555) 123-4567</span> to confirm it's you.</p>
+    
+    <div class="otp-input-group">
+      <input type="text" class="otp-digit" id="otp1" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+      <input type="text" class="otp-digit" id="otp2" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-digit" id="otp3" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-digit" id="otp4" maxlength="1" inputmode="numeric">
+    </div>
+
+    <div class="otp-error-msg" id="otpError">Incorrect code. Please try again.</div>
+
+    <div class="otp-actions">
+      <button class="btn-verify" id="btnVerify" disabled onclick="verifyOTP()">Verify & Continue</button>
+      <div class="otp-resend">
+        <span id="resendArea">Didn't receive it? <a id="resendLink" onclick="resendCode()">Resend code</a> <span class="otp-timer" id="otpTimer"></span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLAR REPORT -->
+<div class="report-view" id="reportView">
+
+  <!-- Hero -->
+  <section class="rpt-hero">
+    <div class="rpt-container">
+      <div class="rpt-tag">Your Solar Report</div>
+      <h1>Congrats, <em id="rptName">Homeowner</em>!</h1>
+      <p class="rpt-sub">Your solar journey starts here. Review your personalized report while Lumen connects you with a vetted installer in your area.</p>
+
+      <div class="rpt-overview">
+        <div class="rpt-overview-top">
+          <div>
+            <h3>Your solar system overview</h3>
+            <div class="rpt-address">Preliminary estimate for <span id="rptAddr">your home</span> *</div>
+          </div>
+          <div class="rpt-savings-badge">
+            <div class="rpt-savings-num">Up to <span id="rptSavePct">33</span>% savings</div>
+            <div class="rpt-savings-lbl">On your electricity bill by going solar</div>
+          </div>
+        </div>
+        <div class="rpt-stats">
+          <div class="rpt-stat">
+            <div class="rpt-stat-top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              System size
+            </div>
+            <div class="rpt-stat-val" id="rptSize">7.2 kW / 20 panels</div>
+          </div>
+          <div class="rpt-stat">
+            <div class="rpt-stat-top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              Estimated usage
+            </div>
+            <div class="rpt-stat-val" id="rptUsage">8,700 kWh/year</div>
+          </div>
+          <div class="rpt-stat">
+            <div class="rpt-stat-top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Energy score
+            </div>
+            <div class="rpt-stat-val" id="rptScore">82 / 100</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rpt-btns">
+        <button class="rpt-btn" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download your report
+        </button>
+        <button class="rpt-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share your report
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roof -->
+  <section class="rpt-section rpt-section-dark">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">Your Property</div>
+      <h2>Your roof for solar</h2>
+      <div class="rpt-roof">
+        <div class="rpt-roof-map">
+          <div class="rpt-roof-ph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Satellite view will appear here with your actual roof</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Options -->
+  <section class="rpt-section rpt-section-navy">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">System Recommendation</div>
+      <h2>System recommendation based on your input</h2>
+      <p class="rpt-desc">Based on your energy usage and roof, here are two options Lumen recommends for your home.</p>
+      <div class="rpt-sys-grid">
+        <div class="rpt-sys-card">
+          <h3>Solar Only</h3>
+          <p>A straightforward solar panel system that covers your daytime energy needs and sends excess power back to the grid for credits.</p>
+          <div class="rpt-sys-vis">
+            <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+              <rect x="10" y="10" width="60" height="50" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <line x1="10" y1="27" x2="70" y2="27" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="10" y1="44" x2="70" y2="44" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="30" y1="10" x2="30" y2="60" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="50" y1="10" x2="50" y2="60" stroke="rgba(255,255,255,0.1)"/>
+              <rect x="80" y="15" width="25" height="40" rx="3" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            </svg>
+          </div>
+          <div class="rpt-specs">
+            <div class="rpt-spec"><div class="rpt-spec-v">7.2 kW - 20 Panels</div><div class="rpt-spec-l">Solar size</div></div>
+          </div>
+        </div>
+        <div class="rpt-sys-card rec">
+          <div class="rpt-badge">Recommended</div>
+          <h3>Solar + Battery</h3>
+          <p>Solar panels paired with battery storage for backup power during outages and maximum self-consumption of your own clean energy.</p>
+          <div class="rpt-sys-vis">
+            <svg width="160" height="80" viewBox="0 0 160 80" fill="none">
+              <rect x="10" y="10" width="60" height="50" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <line x1="10" y1="27" x2="70" y2="27" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="10" y1="44" x2="70" y2="44" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="30" y1="10" x2="30" y2="60" stroke="rgba(255,255,255,0.1)"/>
+              <line x1="50" y1="10" x2="50" y2="60" stroke="rgba(255,255,255,0.1)"/>
+              <rect x="80" y="15" width="25" height="40" rx="3" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <rect x="115" y="10" width="35" height="50" rx="4" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+              <path d="M130 28 L134 35 L128 35 L132 42" stroke="var(--gold)" stroke-width="1.5" fill="none" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="rpt-specs">
+            <div class="rpt-spec"><div class="rpt-spec-v">7.2 kW - 20 Panels</div><div class="rpt-spec-l">Solar size</div></div>
+            <div class="rpt-spec"><div class="rpt-spec-v">20 kWh</div><div class="rpt-spec-l">Battery size</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25 Year Chart -->
+  <section class="rpt-section rpt-section-dark">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">Your Electricity Bill Over 25 Years</div>
+      <h2>Save up to 33% on your electricity bill over 25 years with solar.</h2>
+      <p class="rpt-desc">Your solar and battery system will include solar panels, batteries, and monitoring via a mobile app.</p>
+      <div class="rpt-chart-wrap">
+        <div class="rpt-chart" id="rptChart"></div>
+        <div class="rpt-legend">
+          <div class="rpt-legend-item">
+            <h4>Without solar</h4>
+            <div class="rpt-legend-bar" style="background:rgba(255,255,255,0.2);"></div>
+            <div class="rpt-legend-row"><span>Over 25 years</span><span>100%</span></div>
+          </div>
+          <div class="rpt-legend-item">
+            <h4>With solar</h4>
+            <div class="rpt-legend-bar" style="background: linear-gradient(90deg, var(--gold) 80%, rgba(255,255,255,0.15) 80%);"></div>
+            <div class="rpt-legend-row"><span>Over 25 years</span><span>80%*</span></div>
+          </div>
+          <div class="rpt-legend-item">
+            <h4>With solar and battery</h4>
+            <div class="rpt-legend-bar" style="background: linear-gradient(90deg, var(--green) 67%, rgba(255,255,255,0.15) 67%);"></div>
+            <div class="rpt-legend-row"><span>Over 25 years</span><span>67%*</span></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem; color:rgba(255,255,255,0.3); margin-top: 24px;">* Estimation based on your annual consumption, average electricity rates, and estimated savings through solar self-consumption.</p>
+    </div>
+  </section>
+
+  <!-- Savings by Payment Type -->
+  <section class="rpt-section rpt-section-navy">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">Savings by Payment Type</div>
+      <h2>You'll save money either way — but how much depends on how you pay.</h2>
+      <p class="rpt-desc">Here's how the three main payment options compare over 25 years for your home.</p>
+      <div class="rpt-payment-grid">
+        <div class="rpt-pay-card">
+          <h3>Cash Purchase</h3>
+          <div class="rpt-pay-sub">25-year Savings Benefit</div>
+          <div class="rpt-pay-amount" id="rptCash">$75,399</div>
+          <ul class="rpt-pay-perks">
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Maximum savings</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>No interest charges</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Immediate equity</li>
+          </ul>
+        </div>
+        <div class="rpt-pay-card">
+          <h3>Solar Loan</h3>
+          <div class="rpt-pay-sub">25-year Savings Benefit</div>
+          <div class="rpt-pay-amount" id="rptLoan">$51,570</div>
+          <ul class="rpt-pay-perks">
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>$0 down available</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>You own the system</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>IL state incentives included</li>
+          </ul>
+        </div>
+        <div class="rpt-pay-card">
+          <h3>Solar Lease</h3>
+          <div class="rpt-pay-sub">25-year Savings Benefit</div>
+          <div class="rpt-pay-amount" id="rptLease">$46,580</div>
+          <ul class="rpt-pay-perks">
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>$0 upfront cost</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Maintenance included</li>
+            <li><div class="rpt-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Immediate savings</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rpt-pay-note"><strong>Note:</strong> Benefit amounts are estimates based on financing the net system cost after applying Illinois Shines SREC and ComEd DG rebate upfront. Loan: 25-year term at 8.0% APR. Lease: 25-year term with 2.9% annual escalator. Actual terms may vary based on credit and lender. All benefits assume 2.5% annual utility rate increase.</div>
+      <div class="rpt-pay-cta">
+        <p><strong>These savings are only estimates.</strong> Get exact numbers with a free bill review and home assessment from a local installer.</p>
+        <button class="rpt-pay-cta-btn">Schedule a Free Assessment</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Environmental Impact -->
+  <section class="rpt-section rpt-section-dark">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">Environmental Impact</div>
+      <h2>By switching to solar, you'll make a meaningful impact.</h2>
+      <p class="rpt-desc">Here's what your solar system does for the planet every single year.</p>
+      <div class="rpt-env-grid">
+        <div class="rpt-env-card">
+          <div class="rpt-env-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg></div>
+          <div class="rpt-env-val" id="rptCO2">8.6</div>
+          <div class="rpt-env-label">Tons of CO₂ Avoided</div>
+          <div class="rpt-env-sub">per year</div>
+        </div>
+        <div class="rpt-env-card">
+          <div class="rpt-env-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0020 0h-3"/><path d="M8 6l4-4 4 4"/></svg></div>
+          <div class="rpt-env-val" id="rptTrees">147</div>
+          <div class="rpt-env-label">Trees Planted</div>
+          <div class="rpt-env-sub">equivalent impact</div>
+        </div>
+        <div class="rpt-env-card">
+          <div class="rpt-env-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="rpt-env-val" id="rptMiles">21.4k</div>
+          <div class="rpt-env-label">Miles Not Driven</div>
+          <div class="rpt-env-sub">per year</div>
+        </div>
+        <div class="rpt-env-card">
+          <div class="rpt-env-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="rpt-env-val" id="rptGallons">856</div>
+          <div class="rpt-env-label">Gallons of Gas</div>
+          <div class="rpt-env-sub">saved per year</div>
+        </div>
+      </div>
+      <div class="rpt-env-note">
+        <strong>Environmental calculations based on EPA standards:</strong>
+        <div class="rpt-env-note-list">0.7 lbs CO₂ per kWh of coal electricity · Each tree absorbs ~48 lbs CO₂ per year · Average vehicle emissions: 404g CO₂ per mile · 8,887g CO₂ per gallon of gasoline</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Happens Next -->
+  <section class="rpt-section rpt-section-navy">
+    <div class="rpt-container">
+      <div class="rpt-section-tag">What Happens Next</div>
+      <h2>Your Lumen concierge will handle the rest.</h2>
+      <p class="rpt-desc">Lumen is now researching vetted installers in your area. Here's what to expect once we find the right match.</p>
+      <div class="rpt-steps">
+        <div class="rpt-step-card"><div class="rpt-step-num">1</div><p>Lumen calls to walk you through this report and answer questions</p></div>
+        <div class="rpt-step-card"><div class="rpt-step-num">2</div><p>Your matched installer conducts a detailed survey of your home</p></div>
+        <div class="rpt-step-card"><div class="rpt-step-num">3</div><p>Finalize system design, financing options, and permits</p></div>
+        <div class="rpt-step-card"><div class="rpt-step-num">4</div><p>Installation and activation — start generating your own energy</p></div>
+      </div>
+      <p style="font-size:0.88rem; color:rgba(255,255,255,0.45); margin-top: 24px;">This entire process typically takes 6 to 12 weeks to complete.</p>
+    </div>
+  </section>
+
+  <!-- Report Footer -->
+  <section class="rpt-footer">
+    <div class="rpt-container">
+      <button class="rpt-footer-btn" onclick="window.print()">
+        Download your report
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <p class="rpt-footer-note">Lumen Solar Concierge — working for you, not the solar companies.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget" id="chatWidget">
+  <button class="chat-btn" onclick="openChat()">
+    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="26" r="10" fill="var(--navy)" opacity="0.9"/>
+      <line x1="30" y1="10" x2="30" y2="14" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="30" y1="38" x2="30" y2="42" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="14" y1="26" x2="18" y2="26" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="42" y1="26" x2="46" y2="26" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="18.7" y1="14.7" x2="21.5" y2="17.5" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line x1="38.5" y1="34.5" x2="41.3" y2="37.3" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line x1="41.3" y1="14.7" x2="38.5" y2="17.5" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line x1="21.5" y1="34.5" x2="18.7" y2="37.3" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <path d="M22 46 C22 46 19 50 17 50 C19 49 20 47 20 45" fill="var(--navy)" opacity="0.3"/>
+      <path d="M38 46 C38 46 41 50 43 50 C41 49 40 47 40 45" fill="var(--navy)" opacity="0.3"/>
+    </svg>
+    <div class="chat-pulse"></div>
+  </button>
+  <div class="chat-tooltip" id="chatTooltip">Chat with Lumen</div>
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+const selections = { ownership: null, propertyType: null };
+
+// Chat widget
+function openChat() {
+  // In production, this would open a chat window
+  alert('Chat with Lumen is coming soon! For now, email hello@lumensolar.energy');
+}
+
+// Show tooltip briefly on load
+setTimeout(() => {
+  const tt = document.getElementById('chatTooltip');
+  if (tt) { tt.classList.add('show'); setTimeout(() => tt.classList.remove('show'), 3000); }
+}, 2000);
+
+// Hide chat widget during loader and OTP
+function setChatVisible(visible) {
+  const w = document.getElementById('chatWidget');
+  if (w) w.classList.toggle('hidden', !visible);
+}
+
+// Logo alignment
+function alignLogoText() {
+  const logo = document.querySelector('.tb-logo');
+  const main = logo.querySelector('.tb-logo-main');
+  const sub = logo.querySelector('.tb-logo-sub');
+  if (!main || !sub) return;
+  const tw = main.offsetWidth;
+  sub.style.letterSpacing = '0px';
+  const bw = sub.offsetWidth;
+  const t = sub.textContent.replace(/\s/g, '');
+  const g = t.length - 1;
+  if (g > 0 && tw > bw) sub.style.letterSpacing = ((tw - bw) / g) + 'px';
+}
+document.fonts.ready.then(alignLogoText);
+
+// Navigation
+function goTo(step) {
+  if (step === currentStep) return;
+  
+  const oldStep = document.getElementById('step' + currentStep);
+  const newStep = document.getElementById('step' + step);
+  const oldVis = document.getElementById('vis' + currentStep);
+  const newVis = document.getElementById('vis' + step);
+  
+  oldStep.classList.remove('active');
+  oldStep.classList.add('exit');
+  setTimeout(() => oldStep.classList.remove('exit'), 300);
+  
+  setTimeout(() => {
+    newStep.classList.add('active');
+  }, 200);
+  
+  if (oldVis) oldVis.classList.remove('active');
+  if (newVis) setTimeout(() => newVis.classList.add('active'), 150);
+  
+  currentStep = step;
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('plabel').textContent = String(currentStep).padStart(2, '0');
+  document.getElementById('plabel').classList.toggle('active', true);
+  
+  for (let i = 0; i < totalSteps; i++) {
+    const dot = document.getElementById('dot' + i);
+    dot.classList.toggle('active', i === currentStep - 1);
+    dot.classList.toggle('completed', i < currentStep - 1);
+  }
+  for (let i = 0; i < totalSteps - 1; i++) {
+    const seg = document.getElementById('seg' + i);
+    seg.classList.toggle('completed', i < currentStep - 1);
+    seg.classList.toggle('active', i === currentStep - 1);
+  }
+}
+
+// Radio selection
+function selectRadio(el, group) {
+  el.closest('.radio-group').querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[group] = el.querySelector('span').textContent;
+  validateStep1();
+}
+
+// Icon selection
+function selectIcon(el) {
+  document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selections.propertyType = el.querySelector('span').textContent;
+  document.getElementById('btn2').disabled = false;
+}
+
+// Bill slider
+function updateBill(el) {
+  document.getElementById('billVal').textContent = el.value;
+  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.background = `linear-gradient(90deg, var(--gold) ${pct}%, #E5E7EB ${pct}%)`;
+}
+
+// Consent toggle
+function toggleConsent(el) {
+  el.classList.toggle('checked');
+  validateStep4();
+}
+
+// Validation
+function validateStep1() {
+  const addr = document.getElementById('addressInput').value.trim();
+  const own = selections.ownership;
+  document.getElementById('btn1').disabled = !(addr.length > 3 && own);
+}
+
+function validateStep4() {
+  const name = document.getElementById('nameInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const consent = document.querySelector('.consent-check').classList.contains('checked');
+  document.getElementById('btn4').disabled = !(name && email && phone && consent);
+}
+
+// Live validation listeners
+document.getElementById('addressInput').addEventListener('input', validateStep1);
+['nameInput', 'emailInput', 'phoneInput'].forEach(id => {
+  document.getElementById(id).addEventListener('input', validateStep4);
+});
+
+// Submit → show loader → OTP
+function submitForm() {
+  const btn = document.getElementById('btn4');
+  btn.disabled = true;
+  btn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: loaderSpin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32" stroke-linecap="round"><animate attributeName="stroke-dashoffset" values="32;0" dur="1s" repeatCount="indefinite"/></circle></svg>
+    Processing...
+  `;
+  
+  setTimeout(() => {
+    // Show loader
+    document.getElementById('loaderView').classList.add('active');
+    setChatVisible(false);
+    
+    // Stagger the loader steps
+    setTimeout(() => {
+      document.getElementById('ls1').classList.add('visible');
+    }, 200);
+    setTimeout(() => {
+      document.getElementById('ls1').classList.add('done');
+      document.getElementById('ls2').classList.add('visible');
+    }, 1000);
+    setTimeout(() => {
+      document.getElementById('ls2').classList.add('done');
+      document.getElementById('ls3').classList.add('visible');
+    }, 2000);
+    setTimeout(() => {
+      document.getElementById('ls3').classList.add('done');
+    }, 2800);
+    
+    // After 3.5s, transition to OTP
+    setTimeout(() => {
+      document.getElementById('loaderView').classList.remove('active');
+      document.getElementById('otpView').classList.add('active');
+      
+      // Show the phone number they entered
+      const phone = document.getElementById('phoneInput').value;
+      document.getElementById('otpPhoneDisplay').textContent = phone || '(555) 123-4567';
+      
+      // Focus first OTP field
+      setTimeout(() => document.getElementById('otp1').focus(), 300);
+      
+      // Start resend timer
+      startResendTimer();
+    }, 3500);
+    
+  }, 400);
+}
+
+// OTP digit inputs — auto advance, paste support, backspace
+const otpInputs = [
+  document.getElementById('otp1'),
+  document.getElementById('otp2'),
+  document.getElementById('otp3'),
+  document.getElementById('otp4')
+];
+
+otpInputs.forEach((input, idx) => {
+  input.addEventListener('input', function(e) {
+    const val = e.target.value.replace(/\D/g, '');
+    e.target.value = val.slice(0, 1);
+    
+    if (val && idx < 3) {
+      otpInputs[idx + 1].focus();
+    }
+    
+    if (val) e.target.classList.add('filled');
+    else e.target.classList.remove('filled');
+    
+    // Clear error state
+    otpInputs.forEach(i => i.classList.remove('error'));
+    document.getElementById('otpError').classList.remove('visible');
+    
+    validateOTP();
+  });
+  
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+      otpInputs[idx - 1].focus();
+      otpInputs[idx - 1].value = '';
+      otpInputs[idx - 1].classList.remove('filled');
+    }
+  });
+  
+  input.addEventListener('focus', function() {
+    this.select();
+  });
+  
+  // Paste support
+  input.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+    pasted.split('').forEach((char, i) => {
+      if (otpInputs[i]) {
+        otpInputs[i].value = char;
+        otpInputs[i].classList.add('filled');
+      }
+    });
+    if (pasted.length === 4) otpInputs[3].focus();
+    else if (pasted.length > 0) otpInputs[Math.min(pasted.length, 3)].focus();
+    validateOTP();
+  });
+});
+
+function validateOTP() {
+  const code = otpInputs.map(i => i.value).join('');
+  document.getElementById('btnVerify').disabled = code.length !== 4;
+}
+
+function verifyOTP() {
+  const code = otpInputs.map(i => i.value).join('');
+  const btn = document.getElementById('btnVerify');
+  
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  
+  setTimeout(() => {
+    // Hide OTP, show loader again
+    document.getElementById('otpView').classList.remove('active');
+    showReportLoader();
+  }, 1000);
+}
+
+function showReportLoader() {
+  const loader = document.getElementById('loaderView');
+  // Reset loader steps
+  ['ls1','ls2','ls3'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('visible','done');
+  });
+  
+  // Update loader text for report generation
+  document.querySelector('.loader-label').textContent = 'Generating your solar report';
+  document.querySelector('.loader-sublabel').textContent = 'Crunching the numbers for your home.';
+  document.getElementById('ls1').querySelector('span').textContent = 'Analyzing roof and sunlight data';
+  document.getElementById('ls2').querySelector('span').textContent = 'Calculating system size and savings';
+  document.getElementById('ls3').querySelector('span').textContent = 'Building your personalized report';
+  
+  loader.classList.add('active');
+  
+  setTimeout(() => document.getElementById('ls1').classList.add('visible'), 150);
+  setTimeout(() => { document.getElementById('ls1').classList.add('done'); document.getElementById('ls2').classList.add('visible'); }, 800);
+  setTimeout(() => { document.getElementById('ls2').classList.add('done'); document.getElementById('ls3').classList.add('visible'); }, 1600);
+  setTimeout(() => document.getElementById('ls3').classList.add('done'), 2200);
+  
+  setTimeout(() => {
+    loader.classList.remove('active');
+    // Populate report with user data
+    populateReport();
+    document.getElementById('reportView').classList.add('active');
+    setChatVisible(true);
+    buildChart();
+  }, 2500);
+}
+
+function populateReport() {
+  const name = document.getElementById('nameInput').value.split(' ')[0] || 'Homeowner';
+  const addr = document.getElementById('addressInput').value || 'your home';
+  const bill = parseInt(document.getElementById('billSlider').value) || 180;
+  
+  document.getElementById('rptName').textContent = name;
+  document.getElementById('rptAddr').textContent = addr;
+  
+  // Calculate rough system size from bill
+  const kw = Math.max(4, Math.round(bill / 25 * 10) / 10);
+  const panels = Math.round(kw / 0.4);
+  const usage = Math.round(kw * 1200);
+  const savePct = Math.min(45, Math.round(15 + bill / 20));
+  const score = Math.min(95, Math.round(60 + bill / 10));
+  
+  document.getElementById('rptSize').textContent = kw + ' kW / ' + panels + ' panels';
+  document.getElementById('rptUsage').textContent = usage.toLocaleString() + ' kWh/year';
+  document.getElementById('rptSavePct').textContent = savePct;
+  document.getElementById('rptScore').textContent = score + ' / 100';
+  
+  // Payment savings (rough estimates based on system size)
+  const systemCost = Math.round(kw * 3200);
+  const cashSavings = Math.round(bill * 12 * 25 * 0.65 - systemCost + kw * 1200);
+  const loanSavings = Math.round(cashSavings * 0.68);
+  const leaseSavings = Math.round(cashSavings * 0.62);
+  document.getElementById('rptCash').textContent = '$' + cashSavings.toLocaleString();
+  document.getElementById('rptLoan').textContent = '$' + loanSavings.toLocaleString();
+  document.getElementById('rptLease').textContent = '$' + leaseSavings.toLocaleString();
+  
+  // Environmental impact (based on EPA standards)
+  const co2Tons = Math.round(usage * 0.0007 * 10) / 10;   // 0.7 lbs CO2/kWh → tons
+  const trees = Math.round(co2Tons * 2000 / 48);            // 48 lbs CO2 per tree/year
+  const milesRaw = Math.round(co2Tons * 2000 / 0.89);       // 404g = 0.89 lbs per mile
+  const miles = milesRaw > 1000 ? (Math.round(milesRaw / 100) / 10) + 'k' : milesRaw;
+  const gallons = Math.round(co2Tons * 2000 * 453.6 / 8887);// 8887g CO2 per gallon
+  
+  document.getElementById('rptCO2').textContent = co2Tons;
+  document.getElementById('rptTrees').textContent = trees;
+  document.getElementById('rptMiles').textContent = miles;
+  document.getElementById('rptGallons').textContent = gallons;
+}
+
+function buildChart() {
+  const chart = document.getElementById('rptChart');
+  if (!chart) return;
+  chart.innerHTML = '';
+  for (let y = 1; y <= 25; y++) {
+    const noSolar = 40 + Math.random() * 40 + y * 3;
+    const solar = 20 + Math.random() * 15 + y * 1.5;
+    const battery = 10 + Math.random() * 12 + y * 1;
+    const g = document.createElement('div');
+    g.className = 'rpt-bar-g';
+    g.innerHTML = 
+      '<div class="rpt-bar" style="height:' + noSolar + '%;background:rgba(255,255,255,0.15);"></div>' +
+      '<div class="rpt-bar" style="height:' + solar + '%;background:var(--gold);opacity:0.7;"></div>' +
+      '<div class="rpt-bar" style="height:' + battery + '%;background:var(--green);opacity:0.7;"></div>';
+    chart.appendChild(g);
+  }
+}
+
+// Resend timer
+let resendInterval;
+function startResendTimer() {
+  let seconds = 30;
+  const timer = document.getElementById('otpTimer');
+  const link = document.getElementById('resendLink');
+  
+  link.style.pointerEvents = 'none';
+  link.style.opacity = '0.4';
+  timer.textContent = `(${seconds}s)`;
+  
+  resendInterval = setInterval(() => {
+    seconds--;
+    timer.textContent = `(${seconds}s)`;
+    if (seconds <= 0) {
+      clearInterval(resendInterval);
+      timer.textContent = '';
+      link.style.pointerEvents = 'auto';
+      link.style.opacity = '1';
+    }
+  }, 1000);
+}
+
+function resendCode() {
+  const link = document.getElementById('resendLink');
+  link.textContent = 'Code sent!';
+  link.style.color = 'var(--green)';
+  setTimeout(() => {
+    link.textContent = 'Resend code';
+    link.style.color = '';
+    startResendTimer();
+  }, 2000);
+}
+
+// Phone formatting
+document.getElementById('phoneInput').addEventListener('input', function(e) {
+  let val = e.target.value.replace(/\D/g, '');
+  if (val.length > 0) {
+    if (val.length <= 3) val = '(' + val;
+    else if (val.length <= 6) val = '(' + val.slice(0,3) + ') ' + val.slice(3);
+    else val = '(' + val.slice(0,3) + ') ' + val.slice(3,6) + '-' + val.slice(6,10);
+  }
+  e.target.value = val;
+});
+
+// Init slider
+updateBill(document.getElementById('billSlider'));
+</script>
+
+</body>
+</html>
