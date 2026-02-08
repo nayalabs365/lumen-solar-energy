@@ -23,7 +23,7 @@ export default function Home() {
               </h1>
 
               <p className="text-[1.15rem] text-text-light mb-9 max-w-[520px] leading-[1.8] animate-[fadeInUp_0.8s_ease_0.3s_both]">
-                Lumen does what you shouldn't have to. It analyzes your home, researches your options,
+                Lumen does what you shouldn&apos;t have to. It analyzes your home, researches your options,
                 and finds the right local installer for you — so you never have to deal with pushy sales
                 calls or confusing quotes.
               </p>
@@ -33,7 +33,7 @@ export default function Home() {
                   href="/your-report"
                   className="inline-flex items-center gap-[10px] bg-gold text-navy font-bold px-8 py-4 rounded-[50px] text-[1rem] no-underline transition-all duration-300 shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_8px_30px_rgba(245,158,11,0.4)]"
                 >
-                  Get Started — It's Free
+                  Get Started — It&apos;s Free
                   <svg
                     width="18"
                     height="18"
@@ -118,15 +118,15 @@ export default function Home() {
                 The Problem
               </div>
               <h2 className="font-serif text-[2.8rem] leading-[1.2] mb-6">
-                Going solar shouldn't feel like running a gauntlet.
+                Going solar shouldn&apos;t feel like running a gauntlet.
               </h2>
               <p className="text-[1.05rem] text-text-light mb-[18px] leading-[1.8]">
                 You want clean energy. But between the{' '}
                 <strong className="text-navy font-semibold">pushy sales tactics</strong>, confusing
-                quotes, and fear of getting ripped off, it's exhausting.
+                quotes, and fear of getting ripped off, it&apos;s exhausting.
               </p>
               <p className="text-[1.05rem] text-text-light mb-[18px] leading-[1.8]">
-                <strong className="text-navy font-semibold">Lumen changes that.</strong> It's your
+                <strong className="text-navy font-semibold">Lumen changes that.</strong> It&apos;s your
                 personal solar concierge — analyzing your home, shopping installers, and protecting your
                 privacy. No spam. No pressure. Just smart guidance.
               </p>
@@ -138,7 +138,7 @@ export default function Home() {
                 <div className="text-[2rem] mb-3">😤</div>
                 <div className="font-serif text-[1.05rem] text-navy mb-[6px]">Pushy Sales Calls</div>
                 <div className="text-[0.82rem] text-text-light leading-[1.5]">
-                  Your phone won't stop ringing
+                  Your phone won&apos;t stop ringing
                 </div>
               </div>
               <div className="bg-[#FEF2F2] p-7 rounded-[16px] transition-all duration-[400ms] translate-y-5 hover:translate-y-4 hover:shadow-md">
@@ -176,7 +176,7 @@ export default function Home() {
               How It Works
             </div>
             <h2 className="font-serif text-[2.8rem] leading-[1.2] mb-[18px]">
-              Here's what Lumen does for you.
+              Here&apos;s what Lumen does for you.
             </h2>
             <p className="text-[1.05rem] text-text-light">
               Three simple steps. Zero pressure. Total transparency.
@@ -197,7 +197,7 @@ export default function Home() {
               <p className="text-[0.95rem] text-text-light leading-[1.7]">
                 Tell Lumen your address and a bit about your energy usage. From there, it analyzes
                 your roof, local sunlight, utility rates, and available rebates to build a solar
-                report that's specific to <em>your</em> home — not a generic estimate.
+                report that&apos;s specific to <em>your</em> home — not a generic estimate.
               </p>
             </div>
 
@@ -208,12 +208,12 @@ export default function Home() {
               </div>
               <div className="text-[2.2rem] mb-5">🔍</div>
               <h3 className="font-serif text-[1.35rem] mb-[14px] text-navy">
-                Lumen shops around so you don't have to
+                Lumen shops around so you don&apos;t have to
               </h3>
               <p className="text-[0.95rem] text-text-light leading-[1.7]">
                 While you go about your day, Lumen quietly researches vetted installers in your area,
                 compares pricing and options, and narrows it down to the best fit. No one contacts you
-                during this process. No one even knows you're looking.
+                during this process. No one even knows you&apos;re looking.
               </p>
             </div>
 
@@ -248,7 +248,7 @@ export default function Home() {
             </h2>
             <p className="text-[1.05rem] text-text-light">
               Your name, your number, your email — Lumen holds all of it. No installer sees a thing
-              about you unless you say "I'm ready" or you approve an appointment that Lumen sets up on
+              about you unless you say &quot;I&apos;m ready&quot; or you approve an appointment that Lumen sets up on
               your behalf.
             </p>
           </div>
@@ -280,7 +280,7 @@ export default function Home() {
               </div>
               <h3 className="font-serif text-[1.2rem] text-navy mb-3">Zero Pressure</h3>
               <p className="text-[0.9rem] text-text-light leading-[1.7]">
-                Lumen doesn't push. You move forward when you're ready.
+                Lumen doesn&apos;t push. You move forward when you&apos;re ready.
               </p>
             </div>
           </div>
