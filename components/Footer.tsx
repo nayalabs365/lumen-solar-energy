@@ -11,6 +11,7 @@ export default function Footer() {
   const companyLinks = [
     { href: '/about', label: 'About Lumen' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Service' },
     { href: '/contact', label: 'Contact' },
   ];
 
