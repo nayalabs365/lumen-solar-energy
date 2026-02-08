@@ -87,12 +87,6 @@ export default function Footer() {
                   key={link.href}
                   href={link.href}
                   className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
-                  onClick={(e) => {
-                    if (link.href === '#') {
-                      e.preventDefault();
-                      console.log('Opening chat widget...');
-                    }
-                  }}
                 >
                   {link.label}
                 </Link>
