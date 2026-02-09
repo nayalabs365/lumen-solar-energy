@@ -168,6 +168,7 @@ export default function StartPage() {
       {currentScreen === 'step3' && (
         <Step3Bill
           value={formData.monthlyBill}
+          address={formData.address}
           onComplete={handleStep3Complete}
           onBack={() => goToStep(2)}
         />
@@ -180,6 +181,7 @@ export default function StartPage() {
             phone: formData.phone,
             consent: formData.consent,
           }}
+          address={formData.address}
           onComplete={handleStep4Complete}
           onBack={() => goToStep(3)}
         />

@@ -1,15 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import Script from 'next/script';
+import MapView from '../MapView';
 
 interface Step3Props {
   value: number;
+  address: string;
   onComplete: (monthlyBill: number) => void;
   onBack: () => void;
 }
 
-export default function Step3Bill({ value, onComplete, onBack }: Step3Props) {
+export default function Step3Bill({ value, address, onComplete, onBack }: Step3Props) {
   const [billAmount, setBillAmount] = useState(value);
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBillAmount(parseInt(e.target.value));
@@ -23,15 +28,23 @@ export default function Step3Bill({ value, onComplete, onBack }: Step3Props) {
   const sliderPercent = ((billAmount - 30) / (500 - 30)) * 100;
 
   return (
-    <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
-      {/* Left: Illustration Panel */}
-      <div className="hidden md:flex items-center justify-center bg-gradient-to-br from-[#fef7e6] to-[#fbe7a0] p-12">
-        <div className="text-center">
-          <div className="text-[4rem] mb-4">☀️</div>
-          <div className="text-[3rem] mb-4">💰</div>
-          <p className="text-navy font-serif text-2xl">Save up to 87% on your energy bill</p>
+    <>
+      {/* Load Google Maps Script */}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&loading=async`}
+        strategy="afterInteractive"
+        onLoad={() => {
+          setTimeout(() => {
+            setIsMapsLoaded(true);
+          }, 100);
+        }}
+      />
+
+      <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
+        {/* Left: Satellite Map Panel */}
+        <div className="hidden md:block">
+          <MapView address={address} googleMapsLoaded={isMapsLoaded} />
         </div>
-      </div>
 
       {/* Right: Form Content */}
       <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
@@ -118,5 +131,6 @@ export default function Step3Bill({ value, onComplete, onBack }: Step3Props) {
         }
       `}</style>
     </div>
+    </>
   );
 }
