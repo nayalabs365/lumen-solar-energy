@@ -62,8 +62,8 @@ export default function Step4Contact({ data, address, googleMapsLoaded, onComple
       {/* Right: Form Content */}
       <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
         <div className="w-full max-w-[500px] space-y-6">
-          <h2 className="font-serif text-[2.5rem] leading-[1.2] text-navy">
-            Almost there — how should Lumen <em className="text-gold">reach you?</em>
+          <h2 className="font-serif text-[2.8rem] leading-[1.2] text-navy">
+            How should Lumen <em className="text-gold">reach you?</em>
           </h2>
 
           {/* Full Name */}
