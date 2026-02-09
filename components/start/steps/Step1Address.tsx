@@ -1,63 +1,122 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Script from 'next/script';
 
 interface Step1Props {
   data: { address: string; ownership: string };
   onComplete: (data: { address: string; ownership: string }) => void;
 }
 
-// Extend Window interface to include google
-declare global {
-  interface Window {
-    google?: typeof google;
-  }
+interface Prediction {
+  placePrediction: {
+    placeId: string;
+    text: {
+      text: string;
+    };
+    structuredFormat?: {
+      mainText: {
+        text: string;
+      };
+      secondaryText?: {
+        text: string;
+      };
+    };
+  };
 }
 
 export default function Step1Address({ data, onComplete }: Step1Props) {
   const [address, setAddress] = useState(data.address);
   const [ownership, setOwnership] = useState(data.ownership);
   const [isValid, setIsValid] = useState(false);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const autocompleteInputRef = useRef<HTMLInputElement>(null);
-
-  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
+  const [showPredictions, setShowPredictions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const debounceTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     setIsValid(address.length > 3 && ownership !== '');
   }, [address, ownership]);
 
-  useEffect(() => {
-    if (isScriptLoaded && autocompleteInputRef.current && window.google?.maps?.places) {
-      initAutocomplete();
+  const fetchPredictions = async (input: string) => {
+    if (input.length < 3) {
+      setPredictions([]);
+      setShowPredictions(false);
+      return;
     }
-  }, [isScriptLoaded]);
 
-  const initAutocomplete = () => {
-    if (!autocompleteInputRef.current || !window.google?.maps?.places?.Autocomplete) return;
+    setIsLoading(true);
 
-    const autocomplete = new window.google.maps.places.Autocomplete(
-      autocompleteInputRef.current,
-      {
-        componentRestrictions: { country: 'us' },
-        fields: ['formatted_address', 'address_components', 'geometry'],
-        types: ['address'],
+    try {
+      const response = await fetch('/api/autocomplete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ input }),
+      });
+
+      if (!response.ok) {
+        console.error('Autocomplete API error:', await response.text());
+        setPredictions([]);
+        setShowPredictions(false);
+        return;
       }
-    );
 
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      console.log('Place selected:', place);
+      const data = await response.json();
 
-      if (place.formatted_address) {
-        setAddress(place.formatted_address);
+      if (data.suggestions && data.suggestions.length > 0) {
+        setPredictions(data.suggestions);
+        setShowPredictions(true);
+      } else {
+        setPredictions([]);
+        setShowPredictions(false);
       }
-    });
+    } catch (error) {
+      console.error('Error fetching predictions:', error);
+      setPredictions([]);
+      setShowPredictions(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
+    const value = e.target.value;
+    setAddress(value);
+
+    // Debounce API calls
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      fetchPredictions(value);
+    }, 150); // Wait 150ms after user stops typing
+  };
+
+  const handleSelectPrediction = (prediction: Prediction) => {
+    // Remove ", USA" from the address
+    const addressText = prediction.placePrediction.text.text.replace(', USA', '');
+    setAddress(addressText);
+    setShowPredictions(false);
+    setPredictions([]);
+  };
+
+  const formatPredictionDisplay = (prediction: Prediction) => {
+    const format = prediction.placePrediction.structuredFormat;
+
+    if (format) {
+      // Use structured format: "123 Main St" + "City, State ZIP"
+      const main = format.mainText.text;
+      const secondary = format.secondaryText?.text.replace(', USA', '') || '';
+
+      return { main, secondary };
+    } else {
+      // Fallback to full text without USA
+      const fullText = prediction.placePrediction.text.text.replace(', USA', '');
+      return { main: fullText, secondary: '' };
+    }
   };
 
   const handleSubmit = () => {
@@ -66,36 +125,8 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
     }
   };
 
-  // Fallback if no API key
-  if (!googleMapsApiKey) {
-    return (
-      <div className="fixed top-[120px] bottom-0 left-0 right-0 flex items-center justify-center p-6">
-        <div className="max-w-md bg-red-50 border-2 border-red-500 rounded-2xl p-8 text-center">
-          <h2 className="text-2xl font-serif text-red-900 mb-4">Configuration Error</h2>
-          <p className="text-red-700 mb-4">
-            Google Maps API key is not configured. Please add <code className="bg-red-100 px-2 py-1 rounded">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your environment variables.
-          </p>
-          <p className="text-sm text-red-600">
-            Get your API key from: <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a>
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&loading=async`}
-        onLoad={() => {
-          console.log('Google Maps script loaded successfully');
-          setIsScriptLoaded(true);
-        }}
-        onError={(error) => {
-          console.error('Google Maps script error:', error);
-        }}
-      />
-
       <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
         {/* Left: Illustration Panel */}
         <div className="hidden md:flex items-center justify-center bg-gradient-to-br from-[#e8f0f8] to-[#c5d9ef] p-12">
@@ -112,22 +143,67 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
               Where would you like to go <em className="text-gold">solar?</em>
             </h2>
 
-            {/* Address Field with Google Autocomplete */}
+            {/* Address Field with Custom Autocomplete */}
             <div className="space-y-3">
               <label className="block text-[0.95rem] font-bold uppercase tracking-wider text-navy">
                 ENTER YOUR ADDRESS <span className="text-gold">*</span>
               </label>
-              <input
-                ref={autocompleteInputRef}
-                type="text"
-                value={address}
-                onChange={handleInputChange}
-                placeholder="123 Main Street, City, State"
-                className="w-full px-6 py-5 rounded-2xl bg-white border-2 border-[#CBD5E1] text-[1.1rem] text-navy placeholder:text-gray-400 transition-all duration-300 focus:outline-none focus:border-gold focus:shadow-[0_0_0_4px_rgba(245,158,11,0.1)] hover:border-gold-light"
-                autoComplete="new-password"
-                name="address"
-                id="address-input"
-              />
+
+              <div className="relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={address}
+                  onChange={handleInputChange}
+                  onFocus={() => {
+                    if (predictions.length > 0) {
+                      setShowPredictions(true);
+                    }
+                  }}
+                  placeholder="123 Main Street, City, State"
+                  className="w-full px-6 py-5 rounded-2xl bg-white border-2 border-[#CBD5E1] text-[1.1rem] text-navy placeholder:text-gray-400 transition-all duration-300 focus:outline-none focus:border-gold focus:shadow-[0_0_0_4px_rgba(245,158,11,0.1)] hover:border-gold-light"
+                  autoComplete="off"
+                  name="address"
+                  id="address-input"
+                />
+
+                {/* Loading indicator */}
+                {isLoading && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+
+                {/* Custom Autocomplete Dropdown */}
+                {showPredictions && predictions.length > 0 && (
+                  <div className="absolute z-[9999] w-full mt-1 bg-white rounded-xl border border-[#CBD5E1] shadow-[0_8px_24px_rgba(30,58,90,0.15)] overflow-hidden">
+                    {predictions.map((prediction, index) => {
+                      const { main, secondary } = formatPredictionDisplay(prediction);
+
+                      return (
+                        <button
+                          key={prediction.placePrediction.placeId}
+                          type="button"
+                          onClick={() => handleSelectPrediction(prediction)}
+                          className={`w-full text-left px-4 py-3 hover:bg-[#FEF3C7] transition-colors ${
+                            index > 0 ? 'border-t border-[#E5E7EB]' : ''
+                          }`}
+                        >
+                          <div className="text-[1rem] text-navy font-medium">
+                            {main}
+                          </div>
+                          {secondary && (
+                            <div className="text-[0.875rem] text-gray-600 mt-0.5">
+                              {secondary}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               <p className="text-[0.82rem] text-text-light font-medium">
                 💡 Start typing and select your address from the dropdown
               </p>
@@ -186,40 +262,6 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
           </div>
         </div>
       </div>
-
-      {/* Custom styling for Google Autocomplete dropdown */}
-      <style jsx global>{`
-        .pac-container {
-          z-index: 9999 !important;
-          margin-top: 4px;
-          border-radius: 12px;
-          border: 1px solid #CBD5E1;
-          box-shadow: 0 8px 24px rgba(30, 58, 90, 0.15);
-          font-family: 'Outfit', sans-serif;
-        }
-        .pac-item {
-          padding: 12px 16px;
-          font-size: 1rem;
-          border-top: 1px solid #E5E7EB;
-          cursor: pointer;
-        }
-        .pac-item:first-child {
-          border-top: none;
-        }
-        .pac-item:hover {
-          background-color: #FEF3C7;
-        }
-        .pac-item-selected {
-          background-color: #FEF3C7;
-        }
-        .pac-matched {
-          font-weight: 600;
-          color: #1E3A5A;
-        }
-        .pac-icon {
-          display: none;
-        }
-      `}</style>
     </>
   );
 }

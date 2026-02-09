@@ -10,6 +10,7 @@ import Step4Contact from '@/components/start/steps/Step4Contact';
 import ProcessingLoader from '@/components/start/ProcessingLoader';
 import OTPVerification from '@/components/start/OTPVerification';
 import ChatWidget from '@/components/start/ChatWidget';
+import LocationLoader from '@/components/start/LocationLoader';
 
 export type FormData = {
   address: string;
@@ -22,7 +23,7 @@ export type FormData = {
   consent: boolean;
 };
 
-type Screen = 'step1' | 'step2' | 'step3' | 'step4' | 'loader1' | 'otp' | 'loader2';
+type Screen = 'step1' | 'locationLoader' | 'step2' | 'step3' | 'step4' | 'loader1' | 'otp' | 'loader2';
 
 export default function StartPage() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('step1');
@@ -49,6 +50,10 @@ export default function StartPage() {
 
   const handleStep1Complete = (data: { address: string; ownership: string }) => {
     updateFormData(data);
+    setCurrentScreen('locationLoader');
+  };
+
+  const handleLocationLoadComplete = () => {
     goToStep(2);
   };
 
@@ -129,7 +134,7 @@ export default function StartPage() {
     }
   };
 
-  const showChatWidget = !['loader1', 'otp', 'loader2'].includes(currentScreen);
+  const showChatWidget = !['locationLoader', 'loader1', 'otp', 'loader2'].includes(currentScreen);
 
   return (
     <div className="min-h-screen bg-white">
@@ -146,9 +151,16 @@ export default function StartPage() {
           onComplete={handleStep1Complete}
         />
       )}
+      {currentScreen === 'locationLoader' && (
+        <LocationLoader
+          address={formData.address}
+          onComplete={handleLocationLoadComplete}
+        />
+      )}
       {currentScreen === 'step2' && (
         <Step2PropertyType
           selected={formData.propertyType}
+          address={formData.address}
           onComplete={handleStep2Complete}
           onBack={() => goToStep(1)}
         />
