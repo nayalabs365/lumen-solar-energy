@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Script from 'next/script';
 import MapView from '../MapView';
 
 interface Step4Props {
@@ -12,18 +11,17 @@ interface Step4Props {
     consent: boolean;
   };
   address: string;
+  googleMapsLoaded: boolean;
   onComplete: (data: { fullName: string; email: string; phone: string; consent: boolean }) => void;
   onBack: () => void;
 }
 
-export default function Step4Contact({ data, address, onComplete, onBack }: Step4Props) {
+export default function Step4Contact({ data, address, googleMapsLoaded, onComplete, onBack }: Step4Props) {
   const [fullName, setFullName] = useState(data.fullName);
   const [email, setEmail] = useState(data.email);
   const [phone, setPhone] = useState(data.phone);
   const [consent, setConsent] = useState(data.consent);
   const [isValid, setIsValid] = useState(false);
-  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
-  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   useEffect(() => {
     setIsValid(
@@ -55,23 +53,11 @@ export default function Step4Contact({ data, address, onComplete, onBack }: Step
   };
 
   return (
-    <>
-      {/* Load Google Maps Script */}
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&loading=async`}
-        strategy="afterInteractive"
-        onLoad={() => {
-          setTimeout(() => {
-            setIsMapsLoaded(true);
-          }, 100);
-        }}
-      />
-
-      <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
-        {/* Left: Satellite Map Panel */}
-        <div className="hidden md:block">
-          <MapView address={address} googleMapsLoaded={isMapsLoaded} />
-        </div>
+    <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
+      {/* Left: Satellite Map Panel */}
+      <div className="hidden md:block">
+        <MapView address={address} googleMapsLoaded={googleMapsLoaded} />
+      </div>
 
       {/* Right: Form Content */}
       <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
@@ -184,6 +170,5 @@ export default function Step4Contact({ data, address, onComplete, onBack }: Step
         </div>
       </div>
     </div>
-    </>
   );
 }

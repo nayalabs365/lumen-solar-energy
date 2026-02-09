@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Script from 'next/script';
 import TopBar from '@/components/start/TopBar';
 import ProgressBar from '@/components/start/ProgressBar';
 import Step1Address from '@/components/start/steps/Step1Address';
@@ -28,6 +29,7 @@ type Screen = 'step1' | 'locationLoader' | 'step2' | 'step3' | 'step4' | 'loader
 export default function StartPage() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('step1');
   const [currentStep, setCurrentStep] = useState(1);
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     address: '',
     ownership: '',
@@ -38,6 +40,8 @@ export default function StartPage() {
     phone: '',
     consent: false,
   });
+
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -137,9 +141,21 @@ export default function StartPage() {
   const showChatWidget = !['locationLoader', 'loader1', 'otp', 'loader2'].includes(currentScreen);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Top Bar - Always visible */}
-      <TopBar />
+    <>
+      {/* Load Google Maps Script once for all steps */}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&loading=async`}
+        strategy="afterInteractive"
+        onLoad={() => {
+          setTimeout(() => {
+            setGoogleMapsLoaded(true);
+          }, 100);
+        }}
+      />
+
+      <div className="min-h-screen bg-white">
+        {/* Top Bar - Always visible */}
+        <TopBar />
 
       {/* Progress Bar - Only for step screens */}
       {currentScreen.startsWith('step') && <ProgressBar currentStep={currentStep} totalSteps={4} />}
@@ -161,6 +177,7 @@ export default function StartPage() {
         <Step2PropertyType
           selected={formData.propertyType}
           address={formData.address}
+          googleMapsLoaded={googleMapsLoaded}
           onComplete={handleStep2Complete}
           onBack={() => goToStep(1)}
         />
@@ -169,6 +186,7 @@ export default function StartPage() {
         <Step3Bill
           value={formData.monthlyBill}
           address={formData.address}
+          googleMapsLoaded={googleMapsLoaded}
           onComplete={handleStep3Complete}
           onBack={() => goToStep(2)}
         />
@@ -182,6 +200,7 @@ export default function StartPage() {
             consent: formData.consent,
           }}
           address={formData.address}
+          googleMapsLoaded={googleMapsLoaded}
           onComplete={handleStep4Complete}
           onBack={() => goToStep(3)}
         />
@@ -220,6 +239,7 @@ export default function StartPage() {
 
       {/* Chat Widget */}
       {showChatWidget && <ChatWidget />}
-    </div>
+      </div>
+    </>
   );
 }

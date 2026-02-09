@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Script from 'next/script';
 import MapView from '../MapView';
 
 interface Step2Props {
   selected: string;
   address: string;
+  googleMapsLoaded: boolean;
   onComplete: (propertyType: string) => void;
   onBack: () => void;
 }
@@ -18,11 +18,8 @@ const propertyTypes = [
   { value: 'commercial', label: 'Commercial', icon: '🏢' },
 ];
 
-export default function Step2PropertyType({ selected, address, onComplete, onBack }: Step2Props) {
+export default function Step2PropertyType({ selected, address, googleMapsLoaded, onComplete, onBack }: Step2Props) {
   const [propertyType, setPropertyType] = useState(selected);
-  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
-
-  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   const handleSelect = (type: string) => {
     setPropertyType(type);
@@ -35,23 +32,11 @@ export default function Step2PropertyType({ selected, address, onComplete, onBac
   };
 
   return (
-    <>
-      {/* Load Google Maps Script */}
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&loading=async`}
-        strategy="afterInteractive"
-        onLoad={() => {
-          setTimeout(() => {
-            setIsMapsLoaded(true);
-          }, 100);
-        }}
-      />
-
-      <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
-        {/* Left: Satellite Map Panel */}
-        <div className="hidden md:block">
-          <MapView address={address} googleMapsLoaded={isMapsLoaded} />
-        </div>
+    <div className="fixed top-[120px] bottom-0 left-0 right-0 grid grid-cols-1 md:grid-cols-2">
+      {/* Left: Satellite Map Panel */}
+      <div className="hidden md:block">
+        <MapView address={address} googleMapsLoaded={googleMapsLoaded} />
+      </div>
 
       {/* Right: Form Content */}
       <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
@@ -107,6 +92,5 @@ export default function Step2PropertyType({ selected, address, onComplete, onBac
         </div>
       </div>
     </div>
-    </>
   );
 }
