@@ -24,17 +24,22 @@ export default function Step4Contact({ data, address, googleMapsLoaded, onComple
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
+    // Validate phone has exactly 10 digits
+    const digitsOnly = phone.replace(/\D/g, '');
     setIsValid(
       fullName.trim() !== '' &&
       email.includes('@') &&
-      phone.length >= 10 &&
+      digitsOnly.length === 10 &&
       consent
     );
   }, [fullName, email, phone, consent]);
 
   const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
     const cleaned = value.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+    // Limit to 10 digits only
+    const limited = cleaned.slice(0, 10);
+    const match = limited.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
     if (match) {
       return !match[2] ? match[1] : `(${match[1]}) ${match[2]}${match[3] ? `-${match[3]}` : ''}`;
     }
