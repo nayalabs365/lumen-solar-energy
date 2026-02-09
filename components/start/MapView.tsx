@@ -12,15 +12,13 @@ export default function MapView({ address, googleMapsLoaded }: MapViewProps) {
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markerRef = useRef<google.maps.Marker | null>(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   // Initialize map
   useEffect(() => {
     if (!googleMapsLoaded || !mapRef.current || !window.google?.maps?.Map) {
-      console.log('Map not ready:', { googleMapsLoaded, hasRef: !!mapRef.current, hasGoogle: !!window.google });
       return;
     }
-
-    console.log('Initializing map...');
 
     // Create map centered on US
     const map = new window.google.maps.Map(mapRef.current, {
@@ -33,15 +31,15 @@ export default function MapView({ address, googleMapsLoaded }: MapViewProps) {
     });
 
     mapInstanceRef.current = map;
-
-    console.log('Map initialized');
+    setMapReady(true);
   }, [googleMapsLoaded]);
 
   // Geocode and zoom to address when it changes
   useEffect(() => {
-    if (!address || address.length < 10 || !mapInstanceRef.current || !window.google) return;
+    if (!address || address.length < 10 || !mapReady || !window.google) {
+      return;
+    }
 
-    console.log('Geocoding address:', address);
     setIsGeocoding(true);
 
     const geocoder = new window.google.maps.Geocoder();
@@ -52,14 +50,12 @@ export default function MapView({ address, googleMapsLoaded }: MapViewProps) {
       if (status === 'OK' && results && results[0]) {
         const location = results[0].geometry.location;
 
-        console.log('Geocoding successful:', location.lat(), location.lng());
-
         // Switch to satellite view
         mapInstanceRef.current?.setMapTypeId('satellite');
 
         // Zoom to the location
         mapInstanceRef.current?.setCenter(location);
-        mapInstanceRef.current?.setZoom(20); // Close zoom for roof view
+        mapInstanceRef.current?.setZoom(21); // Maximum zoom for roof view
 
         // Remove old marker if exists
         if (markerRef.current) {
@@ -82,11 +78,9 @@ export default function MapView({ address, googleMapsLoaded }: MapViewProps) {
         });
 
         markerRef.current = marker;
-      } else {
-        console.error('Geocoding failed:', status);
       }
     });
-  }, [address]);
+  }, [address, mapReady]);
 
   return (
     <div className="relative w-full h-full">
