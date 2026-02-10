@@ -6,9 +6,14 @@ export function middleware(request: NextRequest) {
 
   // If accessing from start.lumensolar.energy subdomain
   if (hostname.startsWith('start.')) {
-    // If not already on /start route, redirect there
+    // If at root path, rewrite to /start (serves /start content but keeps URL as root)
+    if (request.nextUrl.pathname === '/') {
+      return NextResponse.rewrite(new URL('/start', request.url));
+    }
+    // If accessing any other path, prepend /start to the path
     if (!request.nextUrl.pathname.startsWith('/start')) {
-      return NextResponse.redirect(new URL('/start', request.url));
+      const newPath = `/start${request.nextUrl.pathname}`;
+      return NextResponse.rewrite(new URL(newPath, request.url));
     }
   }
 
