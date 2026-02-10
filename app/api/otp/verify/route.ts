@@ -54,13 +54,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('OTP verify error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to verify OTP';
     return NextResponse.json(
       {
         success: false,
         verified: false,
-        error: error.message || 'Failed to verify OTP'
+        error: errorMessage
       },
       { status: 500 }
     );

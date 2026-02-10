@@ -43,10 +43,11 @@ export async function POST(request: NextRequest) {
       success: true,
       status: verification.status,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('OTP send error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP';
     return NextResponse.json(
-      { error: error.message || 'Failed to send OTP' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

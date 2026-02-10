@@ -32,6 +32,7 @@ export default function OTPVerification({ phone, onVerified }: OTPVerificationPr
     }, 1000);
 
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = (index: number, value: string) => {
