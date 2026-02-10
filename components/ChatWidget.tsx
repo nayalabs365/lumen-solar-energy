@@ -6,9 +6,8 @@ export default function ChatWidget() {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
-    // TODO: Integrate with actual chat system
-    console.log('Opening Lumen chat...');
-    alert('Chat functionality coming soon!');
+    // Navigate to lead form
+    window.location.href = 'https://start.lumensolar.energy';
   };
 
   return (

@@ -16,9 +16,9 @@ export default function Footer() {
   ];
 
   const getStartedLinks = [
-    { href: 'https://start.lumensolar.energy', label: 'Free Solar Report' },
-    { href: '#', label: 'Chat with Lumen' },
-    { href: '/local-installers', label: 'Find Installers' },
+    { href: 'https://start.lumensolar.energy', label: 'Free Solar Report', external: true },
+    { href: 'https://start.lumensolar.energy', label: 'Chat with Lumen', external: true },
+    { href: '/local-installers', label: 'Find Installers', external: false },
   ];
 
   return (
@@ -83,15 +83,25 @@ export default function Footer() {
               Get Started
             </h4>
             <div className="flex flex-col">
-              {getStartedLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {getStartedLinks.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
         </div>

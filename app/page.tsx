@@ -29,7 +29,7 @@ export default function Home() {
               </p>
 
               <div className="flex gap-4 items-center flex-wrap animate-[fadeInUp_0.8s_ease_0.45s_both]">
-                <Link
+                <a
                   href="https://start.lumensolar.energy"
                   className="inline-flex items-center gap-[10px] bg-gold text-navy font-bold px-8 py-4 rounded-[50px] text-[1rem] no-underline transition-all duration-300 shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_8px_30px_rgba(245,158,11,0.4)]"
                 >
@@ -47,7 +47,7 @@ export default function Home() {
                     <path d="M5 12h14" />
                     <path d="m12 5 7 7-7 7" />
                   </svg>
-                </Link>
+                </a>
               </div>
 
               <p className="mt-5 text-[0.82rem] text-text-light animate-[fadeInUp_0.8s_ease_0.6s_both]">
@@ -335,7 +335,7 @@ export default function Home() {
           <p className="text-[1.15rem] text-white/80 mb-10 leading-[1.8]">
             Get your free solar report in 60 seconds. No spam. No sales calls. Just smart guidance.
           </p>
-          <Link
+          <a
             href="https://start.lumensolar.energy"
             className="inline-flex items-center gap-3 bg-gold text-navy font-bold px-10 py-5 rounded-[50px] text-[1.1rem] no-underline transition-all duration-300 shadow-[0_8px_30px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_12px_40px_rgba(245,158,11,0.4)]"
           >
@@ -353,7 +353,7 @@ export default function Home() {
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />
             </svg>
-          </Link>
+          </a>
           <p className="mt-6 text-[0.85rem] text-white/60">
             Takes 60 seconds · Completely free · Zero obligation
           </p>

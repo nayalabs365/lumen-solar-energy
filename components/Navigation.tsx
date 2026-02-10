@@ -41,17 +41,12 @@ export default function Navigation() {
             </li>
           ))}
           <li>
-            <Link
-              href="#"
+            <a
+              href="https://start.lumensolar.energy"
               className="inline-block bg-navy text-white px-[22px] py-[10px] rounded-[50px] font-semibold text-[0.85rem] transition-all duration-300 border-2 border-navy hover:bg-transparent hover:text-navy no-underline"
-              onClick={(e) => {
-                e.preventDefault();
-                // Open chat widget (will be implemented later)
-                console.log('Opening chat widget...');
-              }}
             >
               Chat with Lumen Now
-            </Link>
+            </a>
           </li>
         </ul>
 
@@ -95,17 +90,13 @@ export default function Navigation() {
               </li>
             ))}
             <li>
-              <Link
-                href="#"
+              <a
+                href="https://start.lumensolar.energy"
                 className="block text-center bg-navy text-white px-6 py-3 rounded-[50px] font-semibold text-[0.9rem] no-underline mt-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMobileMenuOpen(false);
-                  console.log('Opening chat widget...');
-                }}
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Chat with Lumen Now
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
