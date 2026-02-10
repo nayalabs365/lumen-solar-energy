@@ -16,7 +16,7 @@ export default function Footer() {
   ];
 
   const getStartedLinks = [
-    { href: '/your-report', label: 'Free Solar Report' },
+    { href: 'https://start.lumensolar.energy', label: 'Free Solar Report' },
     { href: '#', label: 'Chat with Lumen' },
     { href: '/local-installers', label: 'Find Installers' },
   ];
