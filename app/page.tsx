@@ -73,8 +73,44 @@ export default function Home() {
                       </linearGradient>
                     </defs>
 
+                    <style>
+                      {`
+                        @keyframes sunRiseSet {
+                          0% {
+                            transform: translate(0px, 0px);
+                            opacity: 0.3;
+                          }
+                          25% {
+                            transform: translate(100px, -50px);
+                            opacity: 0.9;
+                          }
+                          50% {
+                            transform: translate(200px, -70px);
+                            opacity: 1;
+                          }
+                          75% {
+                            transform: translate(300px, -50px);
+                            opacity: 0.9;
+                          }
+                          100% {
+                            transform: translate(400px, 0px);
+                            opacity: 0.3;
+                          }
+                        }
+                      `}
+                    </style>
+
                     {/* Sun */}
-                    <circle cx="500" cy="70" r="45" fill="url(#sun)" opacity="0.9" />
+                    <circle
+                      cx="100"
+                      cy="150"
+                      r="45"
+                      fill="url(#sun)"
+                      style={{
+                        animation: 'sunRiseSet 10s ease-in-out infinite',
+                        transformOrigin: 'center',
+                      }}
+                    />
 
                     {/* Ground */}
                     <rect x="0" y="310" width="600" height="110" fill="#86EFAC" rx="0" />
