@@ -107,29 +107,30 @@ export default function StartPage() {
     try {
       // Call the report service API
       const reportServiceUrl = process.env.NEXT_PUBLIC_REPORT_SERVICE_URL || 'http://localhost:3001';
-      const response = await fetch(`${reportServiceUrl}/api/generate-report`, {
+      const response = await fetch(`${reportServiceUrl}/api/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_SECRET}`,
         },
         body: JSON.stringify({
           firstName: formData.fullName.split(' ')[0],
+          fullName: formData.fullName,
           email: formData.email,
           phone: formData.phone,
           address: formData.address,
+          ownershipStatus: formData.ownership,
+          propertyType: formData.propertyType,
           monthlyBill: formData.monthlyBill,
-          source: 'start_form', // This triggers auto-verification
         }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.reportUrl) {
         // Redirect to the report
         window.location.href = data.reportUrl;
       } else {
-        console.error('Report generation failed:', data.error);
+        console.error('Report generation failed:', data.error || 'Unknown error');
         alert('Failed to generate report. Please try again or contact support.');
       }
     } catch (error) {
