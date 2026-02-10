@@ -23,6 +23,9 @@ export default function OTPVerification({ phone, onVerified }: OTPVerificationPr
     // Focus first input on mount
     inputRefs[0].current?.focus();
 
+    // Send initial OTP
+    sendOTP();
+
     // Start resend timer
     const timer = setInterval(() => {
       setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
@@ -68,18 +71,46 @@ export default function OTPVerification({ phone, onVerified }: OTPVerificationPr
     }
   };
 
+  const sendOTP = async () => {
+    try {
+      const response = await fetch('/api/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+      if (!data.success) {
+        console.error('Failed to send OTP:', data.error);
+      }
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+  };
+
   const verifyOTP = async (code: string) => {
     setIsVerifying(true);
     setError('');
 
-    // Simulate API call - in production, verify with Twilio
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('/api/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code }),
+      });
 
-    // For demo, accept "1234" as correct code
-    if (code === '1234') {
-      onVerified();
-    } else {
-      setError('Incorrect code. Please try again.');
+      const data = await response.json();
+
+      if (data.verified) {
+        onVerified();
+      } else {
+        setError('Incorrect code. Please try again.');
+        setOtp(['', '', '', '']);
+        inputRefs[0].current?.focus();
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setError('Verification failed. Please try again.');
       setOtp(['', '', '', '']);
       inputRefs[0].current?.focus();
     }
@@ -90,10 +121,11 @@ export default function OTPVerification({ phone, onVerified }: OTPVerificationPr
   const handleResend = async () => {
     if (resendTimer > 0) return;
 
-    // Simulate resend - in production, trigger Twilio SMS
+    // Resend OTP via Twilio
+    await sendOTP();
     setResendTimer(30);
-    // Show success message briefly
-    alert('Code sent!');
+    setOtp(['', '', '', '']);
+    inputRefs[0].current?.focus();
   };
 
   return (
@@ -181,7 +213,7 @@ export default function OTPVerification({ phone, onVerified }: OTPVerificationPr
 
         {/* Helper Text */}
         <p className="text-[0.8rem] text-text-light mt-6">
-          <em>For demo: Use code <strong>1234</strong></em>
+          Standard message and data rates may apply
         </p>
       </div>
     </div>
