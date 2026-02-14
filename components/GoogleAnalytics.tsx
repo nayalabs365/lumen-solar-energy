@@ -35,7 +35,7 @@ export default function GoogleAnalytics() {
 
     // Initialize dataLayer
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function gtag(...args: any[]) {
+    window.gtag = function gtag(...args: unknown[]) {
       window.dataLayer?.push(args);
     };
 

@@ -205,7 +205,7 @@ export default function StartPage() {
 
   // Track form_abandoned when user tries to leave
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       const stepInfo = getStepInfo(currentScreen);
       if (stepInfo && stepInfo.step_number < 4) {
         trackEvent('form_abandoned', {
