@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,6 +45,7 @@ export default function Navigation() {
             <a
               href="https://start.lumensolar.energy"
               className="inline-block bg-navy text-white px-[22px] py-[10px] rounded-[50px] font-semibold text-[0.85rem] transition-all duration-300 border-2 border-navy hover:bg-transparent hover:text-navy no-underline"
+              onClick={() => trackEvent('cta_click', { button_location: 'navbar' })}
             >
               Chat with Lumen Now
             </a>
@@ -93,7 +95,10 @@ export default function Navigation() {
               <a
                 href="https://start.lumensolar.energy"
                 className="block text-center bg-navy text-white px-6 py-3 rounded-[50px] font-semibold text-[0.9rem] no-underline mt-2"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  trackEvent('cta_click', { button_location: 'navbar' });
+                  setMobileMenuOpen(false);
+                }}
               >
                 Chat with Lumen Now
               </a>

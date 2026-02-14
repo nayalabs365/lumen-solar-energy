@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Footer() {
   const navigationLinks = [
@@ -89,6 +92,7 @@ export default function Footer() {
                     key={link.href}
                     href={link.href}
                     className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
+                    onClick={() => trackEvent('cta_click', { button_location: 'footer' })}
                   >
                     {link.label}
                   </a>

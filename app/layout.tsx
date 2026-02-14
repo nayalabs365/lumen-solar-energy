@@ -3,6 +3,8 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import SectionViewTracker from "@/components/SectionViewTracker";
 
 export const metadata: Metadata = {
   title: "Lumen Solar Concierge — Your Personal Solar Guide",
@@ -17,6 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <GoogleAnalytics />
+        <SectionViewTracker />
         <Navigation />
         <main className="pt-[72px]">
           {children}

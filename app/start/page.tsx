@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { trackEvent } from '@/lib/analytics';
 import TopBar from '@/components/start/TopBar';
 import ProgressBar from '@/components/start/ProgressBar';
 import Step1Address from '@/components/start/steps/Step1Address';
@@ -54,6 +55,21 @@ export default function StartPage() {
 
   const handleStep1Complete = (data: { address: string; ownership: string }) => {
     updateFormData(data);
+
+    // Track address entered
+    trackEvent('address_entered', {});
+
+    // Track homeowner confirmed (if they selected "I own my home")
+    if (data.ownership === 'I own my home') {
+      trackEvent('homeowner_confirmed', {});
+    }
+
+    // Track step completion
+    trackEvent('form_step_complete', {
+      step_number: 1,
+      step_name: 'address',
+    });
+
     setCurrentScreen('locationLoader');
   };
 
@@ -63,11 +79,30 @@ export default function StartPage() {
 
   const handleStep2Complete = (propertyType: string) => {
     updateFormData({ propertyType });
+
+    // Track step completion
+    trackEvent('form_step_complete', {
+      step_number: 2,
+      step_name: 'property_type',
+    });
+
     goToStep(3);
   };
 
   const handleStep3Complete = (monthlyBill: number) => {
     updateFormData({ monthlyBill });
+
+    // Track electric bill entered
+    trackEvent('electric_bill_entered', {
+      bill_range: `$${monthlyBill}`,
+    });
+
+    // Track step completion
+    trackEvent('form_step_complete', {
+      step_number: 3,
+      step_name: 'electric_bill',
+    });
+
     goToStep(4);
   };
 
@@ -78,6 +113,16 @@ export default function StartPage() {
     consent: boolean;
   }) => {
     updateFormData(data);
+
+    // Track step completion
+    trackEvent('form_step_complete', {
+      step_number: 4,
+      step_name: 'contact_info',
+    });
+
+    // Track lead form submission - KEY CONVERSION EVENT
+    trackEvent('lead_form_submit', {});
+
     setCurrentScreen('loader1');
 
     // After 3.5s, check if we should skip OTP
@@ -138,6 +183,41 @@ export default function StartPage() {
       alert('An error occurred. Please try again or contact support.');
     }
   };
+
+  // Helper to get step name from screen
+  const getStepInfo = (screen: Screen): { step_number: number; step_name: string } | null => {
+    const stepMap: Record<string, { step_number: number; step_name: string }> = {
+      step1: { step_number: 1, step_name: 'address' },
+      step2: { step_number: 2, step_name: 'property_type' },
+      step3: { step_number: 3, step_name: 'electric_bill' },
+      step4: { step_number: 4, step_name: 'contact_info' },
+    };
+    return stepMap[screen] || null;
+  };
+
+  // Track form_step_view when step changes
+  useEffect(() => {
+    const stepInfo = getStepInfo(currentScreen);
+    if (stepInfo) {
+      trackEvent('form_step_view', stepInfo);
+    }
+  }, [currentScreen]);
+
+  // Track form_abandoned when user tries to leave
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const stepInfo = getStepInfo(currentScreen);
+      if (stepInfo && stepInfo.step_number < 4) {
+        trackEvent('form_abandoned', {
+          last_step: stepInfo.step_number,
+          last_step_name: stepInfo.step_name,
+        });
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [currentScreen]);
 
   const showChatWidget = !['locationLoader', 'loader1', 'otp', 'loader2'].includes(currentScreen);
 

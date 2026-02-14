@@ -1,8 +1,10 @@
+import CTAButton from '@/components/CTAButton';
+
 export default function Home() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="relative bg-warm-white py-[60px] overflow-hidden">
+      <section data-section-name="hero" className="relative bg-warm-white py-[60px] overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute top-[-5%] right-[-3%] w-[400px] h-[400px] rounded-full opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,rgba(30,58,90,1)_0%,transparent_70%)]" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,rgba(30,58,90,1)_0%,transparent_70%)]" />
@@ -27,9 +29,10 @@ export default function Home() {
               </p>
 
               <div className="flex gap-4 items-center flex-wrap animate-[fadeInUp_0.8s_ease_0.45s_both]">
-                <a
+                <CTAButton
                   href="https://start.lumensolar.energy"
                   className="inline-flex items-center gap-[10px] bg-gold text-navy font-bold px-8 py-4 rounded-[50px] text-[1rem] no-underline transition-all duration-300 shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_8px_30px_rgba(245,158,11,0.4)]"
+                  location="hero"
                 >
                   Get Started — It&apos;s Free
                   <svg
@@ -45,7 +48,7 @@ export default function Home() {
                     <path d="M5 12h14" />
                     <path d="m12 5 7 7-7 7" />
                   </svg>
-                </a>
+                </CTAButton>
               </div>
 
               <p className="mt-5 text-[0.82rem] text-text-light animate-[fadeInUp_0.8s_ease_0.6s_both]">
@@ -202,7 +205,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS SECTION */}
-      <section className="py-[120px] bg-gradient-to-b from-warm-bg to-warm-white">
+      <section data-section-name="how_it_works" className="py-[120px] bg-gradient-to-b from-warm-bg to-warm-white">
         <div className="container mx-auto px-6 max-w-[1200px]">
           {/* Section Header */}
           <div className="text-center max-w-[640px] mx-auto mb-[72px]">
@@ -271,7 +274,7 @@ export default function Home() {
       </section>
 
       {/* TRUST / PROMISE SECTION */}
-      <section className="py-[120px] bg-white">
+      <section data-section-name="trust" className="py-[120px] bg-white">
         <div className="container mx-auto px-6 max-w-[1200px]">
           <div className="text-center max-w-[640px] mx-auto mb-[72px]">
             <div className="text-[0.8rem] font-bold text-gold uppercase tracking-[2px] mb-4">
@@ -333,9 +336,10 @@ export default function Home() {
           <p className="text-[1.15rem] text-white/80 mb-10 leading-[1.8]">
             Get your free solar report in 60 seconds. No spam. No sales calls. Just smart guidance.
           </p>
-          <a
+          <CTAButton
             href="https://start.lumensolar.energy"
             className="inline-flex items-center gap-3 bg-gold text-navy font-bold px-10 py-5 rounded-[50px] text-[1.1rem] no-underline transition-all duration-300 shadow-[0_8px_30px_rgba(245,158,11,0.3)] hover:-translate-y-[2px] hover:shadow-[0_12px_40px_rgba(245,158,11,0.4)]"
+            location="savings_section"
           >
             Get Your Free Solar Report
             <svg
@@ -351,7 +355,7 @@ export default function Home() {
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />
             </svg>
-          </a>
+          </CTAButton>
           <p className="mt-6 text-[0.85rem] text-white/60">
             Takes 60 seconds · Completely free · Zero obligation
           </p>
