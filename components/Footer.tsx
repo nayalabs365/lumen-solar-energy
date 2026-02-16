@@ -1,9 +1,27 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { trackEvent } from '@/lib/analytics';
 
 export default function Footer() {
+  const [isStartSubdomain, setIsStartSubdomain] = useState(false);
+
+  // Detect if we're on start.lumensolar.energy subdomain
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsStartSubdomain(window.location.hostname.includes('start.'));
+    }
+  }, []);
+
+  // Base URL for main site links when on start subdomain
+  const mainSiteUrl = 'https://lumensolar.energy';
+
+  // Get the full href - absolute if on start subdomain, relative otherwise
+  const getHref = (relativePath: string) => {
+    return isStartSubdomain ? `${mainSiteUrl}${relativePath}` : relativePath;
+  };
+
   const navigationLinks = [
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/your-report', label: 'Your Report' },
@@ -53,7 +71,7 @@ export default function Footer() {
               {navigationLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={getHref(link.href)}
                   className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
                 >
                   {link.label}
@@ -71,7 +89,7 @@ export default function Footer() {
               {companyLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={getHref(link.href)}
                   className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
                 >
                   {link.label}
@@ -99,7 +117,7 @@ export default function Footer() {
                 ) : (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    href={getHref(link.href)}
                     className="block text-white/60 no-underline text-[0.9rem] mb-3 transition-colors duration-300 hover:text-white"
                   >
                     {link.label}

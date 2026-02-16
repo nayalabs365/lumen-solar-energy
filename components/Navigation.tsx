@@ -1,12 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trackEvent } from '@/lib/analytics';
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isStartSubdomain, setIsStartSubdomain] = useState(false);
 
+  // Detect if we're on start.lumensolar.energy subdomain
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsStartSubdomain(window.location.hostname.includes('start.'));
+    }
+  }, []);
+
+  // Base URL for main site links when on start subdomain
+  const mainSiteUrl = 'https://lumensolar.energy';
+
+  // Navigation links - converted to absolute URLs when on start subdomain
   const navLinks = [
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/your-report', label: 'Your Report' },
@@ -14,11 +26,16 @@ export default function Navigation() {
     { href: '/faq', label: 'FAQ' },
   ];
 
+  // Get the full href - absolute if on start subdomain, relative otherwise
+  const getHref = (relativePath: string) => {
+    return isStartSubdomain ? `${mainSiteUrl}${relativePath}` : relativePath;
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-[1000] bg-white/92 backdrop-blur-[20px] border-b border-navy/[0.06]">
       <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[72px]">
         {/* Logo */}
-        <Link href="/" className="flex items-center no-underline">
+        <Link href={getHref('/')} className="flex items-center no-underline">
           <div className="flex flex-col leading-[1.1]">
             <span className="font-serif text-[1.65rem] text-navy font-normal tracking-[1px] whitespace-nowrap">
               LUMEN
@@ -34,7 +51,7 @@ export default function Navigation() {
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
-                href={link.href}
+                href={getHref(link.href)}
                 className="relative no-underline text-text text-[0.9rem] font-medium transition-colors duration-300 hover:text-navy after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-gold after:transition-[width] after:duration-300 hover:after:w-full"
               >
                 {link.label}
@@ -83,7 +100,7 @@ export default function Navigation() {
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
-                  href={link.href}
+                  href={getHref(link.href)}
                   className="block py-2 text-text text-[0.95rem] font-medium no-underline hover:text-navy transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
