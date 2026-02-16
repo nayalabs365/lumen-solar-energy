@@ -13,6 +13,7 @@ import ProcessingLoader from '@/components/start/ProcessingLoader';
 import OTPVerification from '@/components/start/OTPVerification';
 import ChatWidget from '@/components/start/ChatWidget';
 import LocationLoader from '@/components/start/LocationLoader';
+import ErrorScreen from '@/components/start/ErrorScreen';
 
 export type FormData = {
   address: string;
@@ -25,12 +26,13 @@ export type FormData = {
   consent: boolean;
 };
 
-type Screen = 'step1' | 'locationLoader' | 'step2' | 'step3' | 'step4' | 'loader1' | 'otp' | 'loader2';
+type Screen = 'step1' | 'locationLoader' | 'step2' | 'step3' | 'step4' | 'loader1' | 'otp' | 'loader2' | 'error';
 
 export default function StartPage() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('step1');
   const [currentStep, setCurrentStep] = useState(1);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [formData, setFormData] = useState<FormData>({
     address: '',
     ownership: '',
@@ -148,6 +150,18 @@ export default function StartPage() {
     }, 2500);
   };
 
+  const handleRetry = () => {
+    // Reset to loader and try generating report again
+    setCurrentScreen('loader2');
+    setTimeout(async () => {
+      await generateReport();
+    }, 500);
+  };
+
+  const handleContactSupport = () => {
+    window.location.href = 'mailto:support@lumensolar.energy?subject=Report Generation Error';
+  };
+
   const generateReport = async () => {
     try {
       // Call the report service API
@@ -176,11 +190,13 @@ export default function StartPage() {
         window.location.href = data.reportUrl;
       } else {
         console.error('Report generation failed:', data.error || 'Unknown error');
-        alert('Failed to generate report. Please try again or contact support.');
+        setErrorMessage(data.error || 'Failed to generate report. Please try again or contact support.');
+        setCurrentScreen('error');
       }
     } catch (error) {
       console.error('Error generating report:', error);
-      alert('An error occurred. Please try again or contact support.');
+      setErrorMessage('An error occurred while generating your report. Please try again or contact support.');
+      setCurrentScreen('error');
     }
   };
 
@@ -316,6 +332,16 @@ export default function StartPage() {
       {/* OTP Verification */}
       {currentScreen === 'otp' && (
         <OTPVerification phone={formData.phone} onVerified={handleOTPVerified} />
+      )}
+
+      {/* Error Screen */}
+      {currentScreen === 'error' && (
+        <ErrorScreen
+          title="Report Generation Failed"
+          message={errorMessage}
+          onRetry={handleRetry}
+          onContactSupport={handleContactSupport}
+        />
       )}
 
       {/* Chat Widget */}
