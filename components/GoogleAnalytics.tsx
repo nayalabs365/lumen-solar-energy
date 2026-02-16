@@ -1,7 +1,6 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
 
 /**
  * Google Analytics 4 Component
@@ -11,43 +10,15 @@ import { useEffect, useState } from 'react';
  * - lumensolar.energy → G-XCEKPBK0EB (default)
  *
  * Uses next/script with afterInteractive strategy to avoid blocking page render.
+ * Initialization script runs AFTER gtag.js loads to ensure proper setup.
  */
 export default function GoogleAnalytics() {
-  const [measurementId, setMeasurementId] = useState<string | null>(null);
+  // Detect hostname at render time (safe in client component)
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
 
-  useEffect(() => {
-    // Detect which subdomain we're on
-    const hostname = window.location.hostname;
-
-    let gaId: string;
-
-    if (hostname.includes('start.')) {
-      // Lead form subdomain
-      gaId =
-        process.env.NEXT_PUBLIC_GA_ID_FORM || 'G-X6JTZKLKJV';
-    } else {
-      // Main website (default)
-      gaId =
-        process.env.NEXT_PUBLIC_GA_ID_MAIN || 'G-XCEKPBK0EB';
-    }
-
-    setMeasurementId(gaId);
-
-    // Initialize dataLayer
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function gtag(...args: unknown[]) {
-      window.dataLayer?.push(args);
-    };
-
-    // Set current date
-    window.gtag('js', new Date());
-
-    // Configure GA with the correct measurement ID
-    window.gtag('config', gaId);
-  }, []);
-
-  // Don't render scripts until we know which ID to use
-  if (!measurementId) return null;
+  const measurementId = hostname.includes('start.')
+    ? (process.env.NEXT_PUBLIC_GA_ID_FORM || 'G-X6JTZKLKJV')
+    : (process.env.NEXT_PUBLIC_GA_ID_MAIN || 'G-XCEKPBK0EB');
 
   return (
     <>
@@ -56,6 +27,16 @@ export default function GoogleAnalytics() {
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
       />
+
+      {/* Initialize GA4 - runs AFTER gtag.js loads */}
+      <Script id="google-analytics-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${measurementId}');
+        `}
+      </Script>
     </>
   );
 }
