@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Script from 'next/script';
 import { trackEvent } from '@/lib/analytics';
 import TopBar from '@/components/start/TopBar';
@@ -24,6 +24,8 @@ export type FormData = {
   email: string;
   phone: string;
   consent: boolean;
+  lat?: number;
+  lng?: number;
 };
 
 type Screen = 'step1' | 'locationLoader' | 'step2' | 'step3' | 'step4' | 'loader1' | 'otp' | 'loader2' | 'error';
@@ -44,6 +46,8 @@ export default function StartPage() {
     consent: false,
   });
 
+  const formScrollRef = useRef<HTMLDivElement>(null);
+
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
   const updateFormData = (updates: Partial<FormData>) => {
@@ -51,11 +55,12 @@ export default function StartPage() {
   };
 
   const goToStep = (step: number) => {
+    formScrollRef.current?.scrollTo({ top: 0, behavior: 'instant' });
     setCurrentStep(step);
     setCurrentScreen(`step${step}` as Screen);
   };
 
-  const handleStep1Complete = (data: { address: string; ownership: string }) => {
+  const handleStep1Complete = (data: { address: string; ownership: string; lat?: number; lng?: number }) => {
     updateFormData(data);
 
     // Track address entered
@@ -180,6 +185,8 @@ export default function StartPage() {
           ownershipStatus: formData.ownership,
           propertyType: formData.propertyType,
           monthlyBill: formData.monthlyBill,
+          ...(formData.lat !== undefined && { lat: formData.lat }),
+          ...(formData.lng !== undefined && { lng: formData.lng }),
         }),
       });
 
@@ -250,7 +257,7 @@ export default function StartPage() {
         }}
       />
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white" ref={formScrollRef}>
         {/* Top Bar - Always visible */}
         <TopBar />
 
@@ -260,7 +267,8 @@ export default function StartPage() {
       {/* Step Screens */}
       {currentScreen === 'step1' && (
         <Step1Address
-          data={{ address: formData.address, ownership: formData.ownership }}
+          data={{ address: formData.address, ownership: formData.ownership, lat: formData.lat, lng: formData.lng }}
+          googleMapsLoaded={googleMapsLoaded}
           onComplete={handleStep1Complete}
         />
       )}
@@ -331,7 +339,11 @@ export default function StartPage() {
 
       {/* OTP Verification */}
       {currentScreen === 'otp' && (
-        <OTPVerification phone={formData.phone} onVerified={handleOTPVerified} />
+        <OTPVerification
+          phone={formData.phone}
+          onVerified={handleOTPVerified}
+          onPhoneChange={(newPhone) => updateFormData({ phone: newPhone })}
+        />
       )}
 
       {/* Error Screen */}

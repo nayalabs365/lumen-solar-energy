@@ -65,8 +65,8 @@ export default function Step4Contact({ data, address, googleMapsLoaded, onComple
       </div>
 
       {/* Right: Form Content */}
-      <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
-        <div className="w-full max-w-[500px] space-y-6">
+      <div className="flex flex-col overflow-y-auto bg-white p-6 md:p-12" style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+        <div className="w-full max-w-[500px] mx-auto space-y-6" style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
           <h2 className="font-serif text-[2.8rem] leading-[1.2] text-navy">
             How should Lumen <em className="text-gold">reach you?</em>
           </h2>

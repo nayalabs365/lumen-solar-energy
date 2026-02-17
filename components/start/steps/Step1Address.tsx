@@ -2,9 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const window: any;
+
 interface Step1Props {
-  data: { address: string; ownership: string };
-  onComplete: (data: { address: string; ownership: string }) => void;
+  data: { address: string; ownership: string; lat?: number; lng?: number };
+  googleMapsLoaded: boolean;
+  onComplete: (data: { address: string; ownership: string; lat?: number; lng?: number }) => void;
 }
 
 interface Prediction {
@@ -24,15 +28,25 @@ interface Prediction {
   };
 }
 
-export default function Step1Address({ data, onComplete }: Step1Props) {
+export default function Step1Address({ data, googleMapsLoaded, onComplete }: Step1Props) {
   const [address, setAddress] = useState(data.address);
   const [ownership, setOwnership] = useState(data.ownership);
   const [isValid, setIsValid] = useState(false);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [showPredictions, setShowPredictions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [lat, setLat] = useState<number | undefined>(data.lat);
+  const [lng, setLng] = useState<number | undefined>(data.lng);
+  const [mapVisible, setMapVisible] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceTimer = useRef<NodeJS.Timeout>();
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInstanceRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const markerInstanceRef = useRef<any>(null);
+  const mapInitializedRef = useRef(false);
 
   useEffect(() => {
     setIsValid(address.length > 3 && ownership !== '');
@@ -63,10 +77,10 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
         return;
       }
 
-      const data = await response.json();
+      const responseData = await response.json();
 
-      if (data.suggestions && data.suggestions.length > 0) {
-        setPredictions(data.suggestions);
+      if (responseData.suggestions && responseData.suggestions.length > 0) {
+        setPredictions(responseData.suggestions);
         setShowPredictions(true);
       } else {
         setPredictions([]);
@@ -85,6 +99,16 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
     const value = e.target.value;
     setAddress(value);
 
+    // Reset map state when input is cleared
+    if (!value || value.trim() === '') {
+      setLat(undefined);
+      setLng(undefined);
+      setMapVisible(false);
+      mapInitializedRef.current = false;
+      mapInstanceRef.current = null;
+      markerInstanceRef.current = null;
+    }
+
     // Debounce API calls
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -92,28 +116,104 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
 
     debounceTimer.current = setTimeout(() => {
       fetchPredictions(value);
-    }, 150); // Wait 150ms after user stops typing
+    }, 150);
+  };
+
+  const goldPinSvg = encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">
+      <path d="M16 0C7.163 0 0 7.163 0 16c0 10.627 14.4 25.067 15.018 25.698a1.333 1.333 0 0 0 1.964 0C17.6 41.067 32 26.627 32 16 32 7.163 24.837 0 16 0z" fill="#F59E0B"/>
+      <circle cx="16" cy="16" r="7" fill="#ffffff"/>
+    </svg>`
+  );
+
+  const initMap = (initLat: number, initLng: number) => {
+    if (!mapContainerRef.current || !window.google?.maps) return;
+
+    const position = { lat: initLat, lng: initLng };
+
+    const map = new window.google.maps.Map(mapContainerRef.current, {
+      center: position,
+      zoom: 19,
+      mapTypeId: 'roadmap',
+      disableDefaultUI: true,
+      zoomControl: true,
+    });
+
+    const marker = new window.google.maps.Marker({
+      position,
+      map,
+      draggable: true,
+      icon: {
+        url: `data:image/svg+xml;charset=UTF-8,${goldPinSvg}`,
+        anchor: new window.google.maps.Point(16, 42),
+      },
+    });
+
+    marker.addListener('dragend', () => {
+      const newPos = marker.getPosition();
+      if (!newPos) return;
+
+      const newLat = newPos.lat();
+      const newLng = newPos.lng();
+
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ location: { lat: newLat, lng: newLng } }, (results: any[], status: string) => {
+        if (status === 'OK' && results && results[0]) {
+          const newAddress = results[0].formatted_address.replace(', USA', '');
+          setAddress(newAddress);
+          setLat(newLat);
+          setLng(newLng);
+        }
+      });
+    });
+
+    mapInstanceRef.current = map;
+    markerInstanceRef.current = marker;
+    mapInitializedRef.current = true;
   };
 
   const handleSelectPrediction = (prediction: Prediction) => {
-    // Remove ", USA" from the address
-    const addressText = prediction.placePrediction.text.text.replace(', USA', '');
-    setAddress(addressText);
+    const fullText = prediction.placePrediction.text.text.replace(', USA', '');
+    setAddress(fullText);
     setShowPredictions(false);
     setPredictions([]);
+
+    if (!googleMapsLoaded || !window.google?.maps) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address: fullText }, (results: any[], status: string) => {
+      if (status === 'OK' && results && results[0]) {
+        const location = results[0].geometry.location;
+        const newLat = location.lat();
+        const newLng = location.lng();
+
+        setLat(newLat);
+        setLng(newLng);
+        setMapVisible(true);
+
+        if (mapInitializedRef.current && mapInstanceRef.current && markerInstanceRef.current) {
+          // Map already initialized - just pan and reposition
+          const pos = { lat: newLat, lng: newLng };
+          mapInstanceRef.current.panTo(pos);
+          markerInstanceRef.current.setPosition(pos);
+        } else {
+          // Initialize map after React renders the container div
+          setTimeout(() => {
+            initMap(newLat, newLng);
+          }, 50);
+        }
+      }
+    });
   };
 
   const formatPredictionDisplay = (prediction: Prediction) => {
     const format = prediction.placePrediction.structuredFormat;
 
     if (format) {
-      // Use structured format: "123 Main St" + "City, State ZIP"
       const main = format.mainText.text;
       const secondary = format.secondaryText?.text.replace(', USA', '') || '';
-
       return { main, secondary };
     } else {
-      // Fallback to full text without USA
       const fullText = prediction.placePrediction.text.text.replace(', USA', '');
       return { main: fullText, secondary: '' };
     }
@@ -121,7 +221,7 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
 
   const handleSubmit = () => {
     if (isValid) {
-      onComplete({ address, ownership });
+      onComplete({ address, ownership, lat, lng });
     }
   };
 
@@ -137,8 +237,11 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
         </div>
 
         {/* Right: Form Content */}
-        <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
-          <div className="w-full max-w-[500px] space-y-8">
+        <div
+          className="flex flex-col overflow-y-auto bg-white p-6 md:p-12"
+          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        >
+          <div className="w-full max-w-[500px] mx-auto space-y-8" style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             <h2 className="font-serif text-[2.8rem] leading-[1.2] text-navy">
               Where would you like to go <em className="text-gold">solar?</em>
             </h2>
@@ -207,6 +310,24 @@ export default function Step1Address({ data, onComplete }: Step1Props) {
               <p className="text-[0.82rem] text-text-light font-medium">
                 💡 Start typing and select your address from the dropdown
               </p>
+
+              {/* Google Map with Draggable Pin */}
+              {mapVisible && (
+                <>
+                  <div
+                    ref={mapContainerRef}
+                    style={{
+                      height: '200px',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      marginTop: '12px',
+                    }}
+                  />
+                  <p style={{ fontSize: '0.82rem', color: '#64748B', marginTop: '8px' }}>
+                    📍 Not on your home? Drag the pin to your rooftop.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Ownership Radio Group */}
