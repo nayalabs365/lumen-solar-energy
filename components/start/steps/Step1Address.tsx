@@ -157,6 +157,7 @@ export default function Step1Address({ data, googleMapsLoaded, onComplete }: Ste
       const newLng = newPos.lng();
 
       const geocoder = new window.google.maps.Geocoder();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       geocoder.geocode({ location: { lat: newLat, lng: newLng } }, (results: any[], status: string) => {
         if (status === 'OK' && results && results[0]) {
           const newAddress = results[0].formatted_address.replace(', USA', '');
@@ -181,6 +182,7 @@ export default function Step1Address({ data, googleMapsLoaded, onComplete }: Ste
     if (!googleMapsLoaded || !window.google?.maps) return;
 
     const geocoder = new window.google.maps.Geocoder();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     geocoder.geocode({ address: fullText }, (results: any[], status: string) => {
       if (status === 'OK' && results && results[0]) {
         const location = results[0].geometry.location;

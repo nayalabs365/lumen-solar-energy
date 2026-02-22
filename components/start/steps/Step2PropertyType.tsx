@@ -39,8 +39,8 @@ export default function Step2PropertyType({ selected, address, googleMapsLoaded,
       </div>
 
       {/* Right: Form Content */}
-      <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
-        <div className="w-full max-w-[500px] space-y-8">
+      <div className="flex items-start justify-center p-6 md:p-12 bg-white overflow-y-auto">
+        <div className="w-full max-w-[500px] space-y-8 my-auto">
           <h2 className="font-serif text-[2.8rem] leading-[1.2] text-navy">
             What type of property is <em className="text-gold">this?</em>
           </h2>

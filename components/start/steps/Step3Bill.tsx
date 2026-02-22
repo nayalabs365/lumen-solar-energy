@@ -33,8 +33,8 @@ export default function Step3Bill({ value, address, googleMapsLoaded, onComplete
       </div>
 
       {/* Right: Form Content */}
-      <div className="flex items-center justify-center p-6 md:p-12 bg-white overflow-y-auto">
-        <div className="w-full max-w-[500px] space-y-8">
+      <div className="flex items-start justify-center p-6 md:p-12 bg-white overflow-y-auto">
+        <div className="w-full max-w-[500px] space-y-8 my-auto">
           <h2 className="font-serif text-[2.8rem] leading-[1.2] text-navy">
             What&apos;s your monthly <em className="text-gold">energy bill?</em>
           </h2>
